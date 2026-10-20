@@ -1,0 +1,88 @@
+{
+  "_meta": {
+    "source": "docx/实现方案_L与LC耦合并网逆变器.docx 附录A 参数速查表 + 技术文件2.docx",
+    "note": "所有脚本(matlab/python/dsp)从此文件读取参数，保证与报告严格一致",
+    "version": "v1.0",
+    "date": "2026-10-20"
+  },
+  "rating": {
+    "P_n_W": 200,
+    "V_mpp_V": 75,
+    "I_mpp_A": 2.7,
+    "Voc_V": 90,
+    "Isc_A": 2.9,
+    "U_g_Vrms": 36,
+    "f_g_Hz": 50
+  },
+  "switching": {
+    "f_sw_Hz": 20000,
+    "f_s_Hz": 20000,
+    "t_dead_ns": 400,
+    "t_dead_alt_ns": 300,
+    "TBPRD": 2500,
+    "EPWMCLK_Hz": 100000000
+  },
+  "plant": {
+    "L_H": 0.0005,
+    "C_F": 2.0e-5,
+    "R_d_options_ohm": [0, 1, 2.2],
+    "R_d_default_ohm": 0,
+    "L_g_H": 0.0005,
+    "L_g_options_H": [0.0001, 0.0003, 0.0005],
+    "C_dc_F": 0.0045,
+    "R_parasitic_ohm": 0.1
+  },
+  "resonance": {
+    "f0_without_Lg_Hz": 1590,
+    "f_res_formula": "f_res = 1/(2*pi) * sqrt((L+L_g)/(L*L_g*C))",
+    "f_res_Lg05_Hz": 2250,
+    "f_res_Lg01_Hz": 3900,
+    "Z0_ohm": 5.0,
+    "design_range_Hz": [500, 2000],
+    "f_s_over_6_Hz": 3333
+  },
+  "control": {
+    "pll_sogi_k": 1.41,
+    "pll_pi_kp": 0.67,
+    "pll_pi_ki": 22,
+    "current_pr_kp": 4.7,
+    "current_pr_kr": 300,
+    "current_pr_wc_rad_s": 5,
+    "voltage_pi_kp": 0.2,
+    "voltage_pi_ki": 5,
+    "voltage_pi_bandwidth_Hz": 10,
+    "I_amp_limit_A": [0, 10],
+    "Vdc_ref_limit_V": [62, 75],
+    "mppt_dV_V": 0.5,
+    "mppt_T_ms": 100,
+    "mppt_init_frac_Voc": 0.8,
+    "modulation_limit": 0.95
+  },
+  "protection": {
+    "I_oc_soft_A": 10,
+    "I_oc_hard_A": 12,
+    "V_dc_ov_V": 95,
+    "V_dc_uv_V": 58,
+    "U_g_range_Vrms": [30, 42],
+    "f_g_range_Hz": [49, 51],
+    "pll_unlock_time_s": 1
+  },
+  "power_points": [
+    {"id": "P35", "irradiance": 0.35, "P_W_approx": 70},
+    {"id": "P65", "irradiance": 0.65, "P_W_approx": 130},
+    {"id": "P90", "irradiance": 0.90, "P_W_approx": 180}
+  ],
+  "metrics": {
+    "thd_harmonic_range": [2, 50],
+    "thd_window_ms": 200,
+    "freq_resolution_Hz": 5,
+    "ripple_hp_cutoff_Hz": 5000,
+    "ripple_target_freq_Hz": 40000,
+    "phase_margin_min_deg": 30
+  },
+  "sweep": {
+    "L_scan_H": [0.0003, 0.0005, 0.00075, 0.001, 0.0015],
+    "C_scan_F": [1.0e-5, 2.0e-5, 3.0e-5],
+    "R_d_scan_ohm": [0, 1, 2.2]
+  }
+}

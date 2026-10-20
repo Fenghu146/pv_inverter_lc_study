@@ -1,0 +1,31 @@
+# 构建产物
+dsp/tests/*.exe
+dsp/tests/*.o
+*.o
+*.obj
+*.exe
+
+# MATLAB/Simulink 生成物
+*.slxc
+*.autosave
+*.asv
+slprj/
+sccprj/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 可一键重生成的仿真原始数据(运行 python\sim\run_sim_tasks.py 生成)
+data/sim_results/*.csv
+
+# 实测原始数据默认不入库(结题材料另行归档)
+data/experiments/*.csv
+
+# 临时文件
+_tmp*
+matlab_check.txt
+*_check.txt
+.DS_Store
+Thumbs.db
