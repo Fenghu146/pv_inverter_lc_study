@@ -25,6 +25,7 @@ void ctrl_init(CtrlContext *c, float voc)
     c->pwm_enable = 0;
     c->relay_close = 0;
     c->v_star = 0.0f;
+    c->v_cmd = 0.0f;
     c->i_ref = 0.0f;
 }
 
@@ -127,17 +128,40 @@ void ctrl_isr(CtrlContext *c, const CtrlMeas *m, CtrlOut *o)
         (c->fsm.state == ST_CONNECT || c->fsm.state == ST_MPPT_RUN ||
          c->fsm.state == ST_FIXED_I)) {
         float err;
+        float sgn;
+        /* 反馈取逆变侧 i_L（含 LC 时 i_L 才有开关纹波，与仿真口径一致） */
         c->i_ref = c->i_amp * sinf(c->pll.theta);
-        err = c->i_ref - m->i_grid;
+        err = c->i_ref - m->i_L;
         c->v_star = pr_step(&c->pr, err, m->v_grid, m->vdc);
+
+        /* 死区补偿：抵消 v_err = -2·fsw·td·Vdc·sign(i_L)
+         * 小电流(<0.05 A)不补，避免过零抖动；i_amp 为零时不补。 */
+        sgn = 0.0f;
+        if (m->i_L > 0.05f) {
+            sgn = 1.0f;
+        } else if (m->i_L < -0.05f) {
+            sgn = -1.0f;
+        }
+        c->v_cmd = c->v_star + DT_COMP_COEF * m->vdc * sgn;
+        /* 补偿后仍在物理可实现范围内再限一次 */
+        {
+            float lim = MOD_DUTY_LIM * m->vdc;
+            if (c->v_cmd > lim) {
+                c->v_cmd = lim;
+            } else if (c->v_cmd < -lim) {
+                c->v_cmd = -lim;
+            }
+        }
     } else if (c->fsm.state == ST_OPEN_LOOP && c->fsm.pwm_enable) {
         pr_reset(&c->pr);
         c->i_ref = 0.0f;
         c->v_star = OPEN_LOOP_DUTY * m->vdc * sinf(c->pll.theta);
+        c->v_cmd = c->v_star;
     } else {
         pr_reset(&c->pr);
         c->i_ref = 0.0f;
         c->v_star = 0.0f;
+        c->v_cmd = 0.0f;
     }
 
     /* P&O：仅 MPPT_RUN，100 ms 平均功率 */
@@ -164,6 +188,7 @@ void ctrl_isr(CtrlContext *c, const CtrlMeas *m, CtrlOut *o)
 
     if (o) {
         o->v_star = c->v_star;
+        o->v_cmd = c->v_cmd;
         o->i_ref = c->i_ref;
         o->i_amp = c->i_amp;
         o->vdc_ref = c->vdc_ref;
@@ -173,5 +198,6 @@ void ctrl_isr(CtrlContext *c, const CtrlMeas *m, CtrlOut *o)
         o->relay_close = c->relay_close;
         o->state = c->fsm.state;
         o->fault_code = c->fsm.fault_code ? c->fsm.fault_code : c->prot.active;
+        o->i_L = m->i_L;
     }
 }

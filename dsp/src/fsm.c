@@ -86,12 +86,16 @@ void fsm_step(Fsm *f, FsmIn *in, float ts)
         break;
 
     case ST_PRECHARGE:
-        /* 预充阶段允许上管调制由上层解释；算法层只给出使能 */
+        /* 预充阶段允许上管调制由上层解释；算法层只给出使能。
+         * 母线必须真正建立（in->precharge_done）才前进；
+         * 超时不再"闯关"，而是报 FAULT_PRECHARGE 停住。 */
         f->pwm_enable = 0;
         f->relay_close = 0;
-        if (in->precharge_done || f->timer_s >= PRECHARGE_MS * 0.001f) {
+        if (in->precharge_done) {
             f->state = ST_SYNC;
             f->timer_s = 0.0f;
+        } else if (f->timer_s >= PRECHARGE_TIMEOUT_MS * 0.001f) {
+            enter_fault(f, FAULT_PRECHARGE);
         }
         break;
 

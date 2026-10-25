@@ -1,0 +1,67 @@
+/*
+ * pv_inverter.syscfg — 目标板引脚与片内外设分配
+ *
+ * 用法：CCS 里 File → New → SysConfig File，粘贴本文件内容，
+ *       再用 SysConfig GUI 打开即可图形化修改；生成的 board.h/board.c
+ *       与 hal_c2000.c 的通道编号严格对应。
+ *
+ * 若不用 SysConfig，本文件同时是"引脚分配的唯一真源"，
+ * 手工写 driverlib 时照此表配置即可。
+ */
+
+/* ===================== 时钟 ===================== */
+// SYSCLK = 200 MHz, EPWMCLK = 100 MHz, ADCCLK = 50 MHz
+// 若实际 SYSCLK 不是 200 MHz，必须同步修改 param.h 的 PWM_CLK_HZ
+// 与 PWM_TBPRD（fsw = EPWMCLK / (2·TBPRD)）。
+
+/* ===================== ePWM ===================== */
+// EPWM1  A/B → 桥臂 A（S1 上管 / S2 下管）
+//        时基: UP_DOWN, TBPRD = 2500 (=100MHz/(2·20kHz))
+//        AQ  : ZERO→SET, UP_CMPA→CLEAR, DOWN_CMPA→SET, PERIOD→CLEAR
+//        DB  : RED = FED = 40 (=400ns @100MHz), 极性 ACTIVE_HIGH
+//        SOCA: TBCTR = PERIOD 时触发 ADC（20 kHz）
+//        中断: TBCTR = ZERO, 每 1 次 → 20 kHz ISR
+//
+// EPWM2  A/B → 桥臂 B（S3 上管 / S4 下管）
+//        与 EPWM1 同 TBPRD / 同相位；SYNCIN ← EPWM1 SYNCOUT
+//        DB  : 同 EPWM1
+//
+// 注意：两腿共用同一 CMPA 语义（见 pwm_mod.c），
+//       A 腿只用 EPWM1A，EPWM1B 由 DB 自动生成互补；
+//       B 腿同理只用 EPWM2A。
+
+/* ===================== ADC ===================== */
+// ADCA  SOC0..SOC3，触发源 EPWM1_SOCA，采样窗 15 SYSCLK
+//   A0  V_pv    分压 100V→3V          （单极性）
+//   A1  I_pv    0.1 V/A，1.5V 偏置
+//   A2  V_dc    分压 100V→3V          （单极性）
+//   A3  V_g     双极性 ±60V→±1.5V，1.5V 偏置
+// ADCB  SOC0..SOC1，同触发源
+//   B0  I_L     0.1 V/A，1.5V 偏置   ← 电流环反馈
+//   B1  I_g     0.1 V/A，1.5V 偏置   ← 保护与计量
+//
+// 采样时刻 = 载波峰值（TBCTR = PERIOD），
+// 此时电感电流处在平均值的稳定点，避开开关尖峰。
+
+/* ===================== CMPSS / Trip ===================== */
+// CMPSS1  C0 高比较器
+//   正输入 : A1（I_L 调理后）
+//   DAC    : OC_HARD_A = 12 A → 1.5V + 1.2V = 2.7V → 码 3686
+//   滤波   : 8 采样，阈值 8（全部超限才翻转，抗尖峰）
+//   输出   : CTRIPH → EPWM XBAR TRIP4
+// EPWM1/2  TripZone
+//   OSHT4  : OST 一次性封锁，A 置低 / B 置高（上管关、下管开）
+//   锁存   : 只能由 hal_clear_trip() 清除
+
+/* ===================== GPIO ===================== */
+// GPIO32  继电器（并网接触器）  输出，默认 0
+// GPIO33  预充旁路 MOSFET       输出，默认 0
+// GPIO34  故障 LED              输出，默认 0
+// GPIO35  运行 LED              输出，默认 0
+//
+// 若需要 SCI 上报（波形/故障码），建议：
+//   GPIO28/29 → SCIA RX/TX，115200 8N1
+
+/* ===================== 中断 ===================== */
+// INT_EPWM1  → epwm1_isr  （20 kHz，PIE 组 3）
+// 其余中断不启用，主循环轮询

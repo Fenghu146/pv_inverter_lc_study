@@ -1,0 +1,34 @@
+{
+  "name": "pv_inverter_f28379d",
+  "version": "1.0.0",
+  "description": "Single-phase grid-connected PV inverter with L / LC coupling — F28379D CPU1",
+  "mainCompile": "cpu1",
+  "compilers": {
+    "cpu1": "ti-cgt-c2000_25.11.1.LTS"
+  },
+  "products": [
+    "com.ti.SIMPLELINK_C2000WARE"
+  ],
+  "files": [
+    {"path": "app/main.c"},
+    {"path": "../src/control_isr.c"},
+    {"path": "../src/pr_ctrl.c"},
+    {"path": "../src/pi_ctrl.c"},
+    {"path": "../src/sogi_pll.c"},
+    {"path": "../src/protect.c"},
+    {"path": "../src/fsm.c"},
+    {"path": "../src/mppt_po.c"},
+    {"path": "../src/pwm_mod.c"},
+    {"path": "../src/app.c"},
+    {"path": "../src/hal_c2000.c"}
+  ],
+  "includePaths": [
+    "../include"
+  ],
+  "defines": [
+    "__C2000__"
+  ],
+  "linkerCommandFile": "2837xD_FLASH_lnk_cpu1.cmd",
+  "device": "F28379D",
+  "cpu": "cpu1"
+}

@@ -4,6 +4,9 @@ dsp/tests/*.o
 *.o
 *.obj
 *.exe
+*.out
+*.map
+dsp/ccs/build/
 
 # MATLAB/Simulink 生成物
 *.slxc
@@ -17,10 +20,12 @@ __pycache__/
 *.pyc
 .venv/
 
-# 可一键重生成的仿真原始数据(运行 python\sim\run_sim_tasks.py 生成)
+# 可一键重生成的仿真原始数据（运行 python/sim/run_sim_tasks.py 生成）
 data/sim_results/*.csv
+# 同上，Simulink 侧（运行 matlab/run_sim_tasks_matlab.m 生成，单个 15MB+）
+data/sim_results_matlab/*.csv
 
-# 实测原始数据默认不入库(结题材料另行归档)
+# 实测原始数据默认不入库（结题材料另行归档）
 data/experiments/*.csv
 
 # 临时文件

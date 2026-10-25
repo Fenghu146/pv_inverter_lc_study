@@ -7,9 +7,13 @@
  *   3. 状态机
  *   4. 每 20 拍：直流电压 PI → I_amp*
  *   5. 电流参考 i_ref = I_amp*·sin(θ)
- *   6. 准 PR + v_g 前馈 → v*
- *   7. 100 ms 窗平均后 P&O，更新 Vdc*
+ *   6. 准 PR + v_g 前馈 → v*（反馈取逆变侧 i_L）
+ *   7. 死区补偿 → v_cmd
+ *   8. 100 ms 窗平均后 P&O，更新 Vdc*
  * FAULT：pwm_enable=0，relay_close=0，v*=0。
+ *
+ * 反馈电流口径：电流环用 i_L（逆变侧），与 python/sim/inverter_sim.py、
+ * Simulink 模型及方案 5.1 控制框图一致。i_g 只用于保护与并网计量。
  */
 #ifndef PV_INV_CONTROL_ISR_H
 #define PV_INV_CONTROL_ISR_H
@@ -26,7 +30,8 @@ extern "C" {
 
 typedef struct {
     float v_grid;       /* PCC 电压，V */
-    float i_grid;       /* 并网侧电流，A */
+    float i_L;          /* 逆变侧电流，A —— 电流环反馈（与仿真/方案 5.1 一致） */
+    float i_grid;       /* 并网侧电流，A —— 仅保护与计量 */
     float vdc;          /* 母线电压，V */
     float v_pv;         /* 光伏电压，V */
     float i_pv;         /* 光伏电流，A */
@@ -38,7 +43,8 @@ typedef struct {
 } CtrlMeas;
 
 typedef struct {
-    float v_star;       /* 桥臂电压指令，V */
+    float v_star;       /* 电流环输出：桥臂电压指令（V，未含死区补偿） */
+    float v_cmd;        /* 死区补偿后的桥臂电压指令（V）→ pwm_mod 输入 */
     float i_ref;
     float i_amp;
     float vdc_ref;
@@ -48,6 +54,7 @@ typedef struct {
     int   relay_close;
     InvState state;
     uint32_t fault_code;
+    float i_L;          /* 回读：本拍用于反馈的逆变侧电流 */
 } CtrlOut;
 
 typedef struct {
@@ -72,6 +79,7 @@ typedef struct {
     int   pwm_enable;
     int   relay_close;
     float v_star;
+    float v_cmd;
     float i_ref;
 } CtrlContext;
 
