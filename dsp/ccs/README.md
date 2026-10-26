@@ -54,6 +54,25 @@ cd dsp\ccs
 .\build.ps1 -Clean     # 全清重编
 ```
 
+## 一键下载（板子到位后）
+
+```powershell
+cd dsp\ccs
+.\flash.ps1             # 构建 + 烧写 + 校验 + 复位运行
+.\flash.ps1 -SkipBuild  # 只烧写现有固件
+```
+
+- 烧写走 CCS 自带 `DSLite.exe`（命令行，无需开 CCS GUI）：
+  `DSLite flash --config pv_inverter_flash.ccxml -f -v -u build\pv_inverter.out`
+- [pv_inverter_flash.ccxml](pv_inverter_flash.ccxml) 是 LAUNCHXL-F28379D 板载
+  XDS110 + TMS320F28379D 的目标配置，由 CCS 的 DSS 生成器官方产出
+  （[gen_ccxml.js](gen_ccxml.js)，`dss.bat gen_ccxml.js` 可重新生成）。
+  **不要手工拼这个文件**：F28379D 带 CLA 协处理器，手写配置缺 `tixds510cla1.xml`
+  驱动实例时 DSLite 报 `An invalid processor ID has been found`（已踩坑验证）。
+- 烧写参数：`-f` 加载、`-v` 校验、`-u` 结束后复位运行；擦除由加载器按需自动完成。
+- 板子未连接时 `identifyProbe`/`flash` 无法测试，插上 USB 后（设备管理器出现
+  XDS110 类设备）直接跑 `.\flash.ps1` 即可。
+
 ## 三个必须知道的构建细节
 
 **1. 中文路径**
