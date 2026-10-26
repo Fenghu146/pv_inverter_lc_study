@@ -34,3 +34,6 @@ matlab_check.txt
 *_check.txt
 .DS_Store
 Thumbs.db
+
+# 仿真脚本运行日志
+matlab/*.log
