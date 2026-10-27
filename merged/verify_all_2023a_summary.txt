@@ -1,0 +1,607 @@
+  [PASS] 额定点 |V_inv| (L, Lg=0)                           value=37            相量 U_g+(Rf+Rg+jwL)I
+  [PASS] 额定 200W 最小 Vdc (Lg=0, 含Rf+Rg)                   value=55.08         sqrt(2)|V|/0.95
+  [PASS] 额定 200W 最小 Vdc (Lg=1mH)                         value=55.38         L+Lg 串联
+  [PASS] 额定 200W 最小 Vdc (理想, 忽略电阻)                       value=53.84         理想化手算，54 V 量级
+  [PASS] LC 所需 Vdc / L 所需 Vdc (Lg=0)                     value=0.9977        并联 C 使所需直流电压略降（<0.5%）
+  [PASS] LC 运行范围改善量 (Lg=0)                               value=0.2311        并联 C 对 Vdc 影响 <0.5%
+  [PASS] 开关纹波 dIpp(m=0)                                  value=0.6667        Vdc/(2(L+Lg)fsw)
+  [PASS] 开关纹波 dIpp(m=0.64)                               value=0.3936        Vdc(1-m^2)/(2(L+Lg)fsw)
+  [PASS] 额定点开关纹波 RMS                                     value=0.1537        三角波 RMS 在工频周期内平均
+  [PASS] 额定点 TDD 预测                                      value=2.766         dIrms(有效值)/I_rated
+  [PASS] 额定点开关纹波畸变率                                      value=2.766         非 THD(2-50)，仅开关纹波
+  [PASS] 70W: 开关纹波畸变率明显升高                                value=7.987         开关纹波不变/基波变小
+  [PASS] 70W: TDD 与额定接近                                  value=2.795         TDD 以额定电流为基准
+  [PASS] f_res(Lg=1mH)                                   value=1779          LCL 解析式
+  [PASS] f_res(Lg=0.5mH)                                 value=2297          LCL 解析式
+  [PASS] f_res 随 Lg 单调下降                                 value=[2297 1779 1453]  
+  [PASS] f_res < fsw/6                                   value=2297          Parker/McGrath/Holmes 稳定区判据
+  [PASS] 20kHz 衰减倍数 LC/L (Lg=1mH)                        value=69.27         LCL 电容分流
+  [PASS] 20kHz 衰减倍数 LC/L (Lg~0)                          value=1.07          理想电网下 LC 对 i_g 无优势
+  [PASS] Q(Lg=1mH, Rd=1)                                 value=7.454         Z0/Rd
+  [PASS] Q(Rd=5) 明显降低                                    value=1.491         可放心扫描 Rd
+  [PASS] Vdc=80V 可输出 200W                                value=1806          
+  [PASS] Vdc=54V 不能输出 200W                               value=62.02         
+  [PASS] Pmax 随 Vdc 单调增                                  value=[62.02 300.3]  
+  [PASS] 解调极限 Vdc(P=0)                                   value=53.59         P=0 也不能低于此值
+  [PASS] 准PR直流增益 = Kp                                    value=0.07854       1 s 阶跃后 v/e
+  [PASS] 谐振项直流增益 = 0                                     value=0             sum(b)/(1+a1+a2)
+  [PASS] 50 Hz 控制器相位 ±5°                                 value=0.0001732     预畸变Tustin
+  [PASS] 50 Hz 控制器增益 = Kp+Kr                             value=4.078         谐振点增益
+  [PASS] L 对象闭环极点 |z|<1                                  value=0.996         5 个极点
+  [PASS] L 对象相位裕度 >=45°                                  value=49.09         含1.5拍延时
+  [PASS] L 对象增益裕度 >=6 dB                                 value=17.44         
+  [PASS] L 闭环50Hz相位 ±5°                                  value=-0.1662       闭环跟踪
+  [PASS] LC 对象闭环极点 |z|<1                                 value=0.996         7 个极点
+  [PASS] LC 对象相位裕度 >=45°                                 value=49.04         含1.5拍延时
+  [PASS] LC 对象增益裕度 >=6 dB                                value=12.26         
+  [PASS] LC 闭环50Hz相位 ±5°                                 value=-0.1662       闭环跟踪
+  [PASS] 输出饱和时谐振状态冻结                                     value=0.9           不做状态限幅
+  [PASS] 退饱和后谐振项收敛                                       value=-0.007465     0.5 s 后残余
+  [PASS] L  70W 幅值误差<2%                                  value=-0.03795      I1=2.7488 A, ref=2.7499 A
+  [PASS] L  70W 相位误差<3°                                  value=-0.2401       i_g 相对 u_g
+  [PASS] L  70W |Idc|<0.028A                             value=-8.017e-09    额定电流 0.5%
+  [PASS] L  70W 稳态无限幅                                    value=0             PR/调制/PLL 均未触发
+  [PASS] L  70W 功率平衡<2%                                  value=0.005962      Pconv=70.54, Pac=69.97, loss=0.57 W
+  [PASS] L 130W 幅值误差<2%                                  value=-0.03871      I1=5.1049 A, ref=5.1069 A
+  [PASS] L 130W 相位误差<3°                                  value=-0.2059       i_g 相对 u_g
+  [PASS] L 130W |Idc|<0.028A                             value=-1.489e-08    额定电流 0.5%
+  [PASS] L 130W 稳态无限幅                                    value=0             PR/调制/PLL 均未触发
+  [PASS] L 130W 功率平衡<2%                                  value=0.009693      Pconv=131.91, Pac=129.94, loss=1.95 W
+  [PASS] L 200W 幅值误差<2%                                  value=-0.03901      I1=7.8537 A, ref=7.8567 A
+  [PASS] L 200W 相位误差<3°                                  value=-0.1919       i_g 相对 u_g
+  [PASS] L 200W |Idc|<0.028A                             value=-2.291e-08    额定电流 0.5%
+  [PASS] L 200W 稳态无限幅                                    value=0             PR/调制/PLL 均未触发
+  [PASS] L 200W 功率平衡<2%                                  value=0.01382       Pconv=204.57, Pac=199.91, loss=4.63 W
+  [PASS] LC  70W 幅值误差<2%                                 value=0.05877       I1=2.7515 A, ref=2.7499 A
+  [PASS] LC  70W 相位误差<3°                                 value=-0.2266       i_g 相对 u_g
+  [PASS] LC  70W |Idc|<0.028A                            value=-8.651e-10    额定电流 0.5%
+  [PASS] LC  70W 稳态无限幅                                   value=0             PR/调制/PLL 均未触发
+  [PASS] LC  70W 功率平衡<2%                                 value=0.0003778     Pconv=70.63, Pac=70.04, loss=0.59 W
+  [PASS] LC 130W 幅值误差<2%                                 value=0.06655       I1=5.1103 A, ref=5.1069 A
+  [PASS] LC 130W 相位误差<3°                                 value=-0.2086       i_g 相对 u_g
+  [PASS] LC 130W |Idc|<0.028A                            value=-7.764e-09    额定电流 0.5%
+  [PASS] LC 130W 稳态无限幅                                   value=0             PR/调制/PLL 均未触发
+  [PASS] LC 130W 功率平衡<2%                                 value=0.00653       Pconv=132.07, Pac=130.08, loss=1.98 W
+  [PASS] LC 200W 幅值误差<2%                                 value=0.06973       I1=7.8622 A, ref=7.8567 A
+  [PASS] LC 200W 相位误差<3°                                 value=-0.2013       i_g 相对 u_g
+  [PASS] LC 200W |Idc|<0.028A                            value=-1.581e-08    额定电流 0.5%
+  [PASS] LC 200W 稳态无限幅                                   value=0             PR/调制/PLL 均未触发
+  [PASS] LC 200W 功率平衡<2%                                 value=0.01165       Pconv=204.81, Pac=200.13, loss=4.65 W
+  [PASS] L  70W 功率平衡<2%                                  value=0.01527       Pdc=70.74 Pab=70.54 Psw=0.20 Pac=69.96 Ppass=0.57
+  [PASS] L  70W |Idc|<0.028A                             value=0.000761      额定电流 0.5%
+  [PASS] L  70W 幅值误差<2%                                  value=-0.05531      
+  [PASS] L  70W 相位误差<3°                                  value=-0.2157       i_g 相对 u_grid
+  [PASS] L  70W 稳态无限幅                                    value=0             PR/调制/PLL
+  [PASS] L 130W 功率平衡<2%                                  value=0.008221      Pdc=132.30 Pab=131.91 Psw=0.39 Pac=129.94 Ppass=1.96
+  [PASS] L 130W |Idc|<0.028A                             value=-0.003418     额定电流 0.5%
+  [PASS] L 130W 幅值误差<2%                                  value=-0.04394      
+  [PASS] L 130W 相位误差<3°                                  value=-0.1849       i_g 相对 u_grid
+  [PASS] L 130W 稳态无限幅                                    value=0             PR/调制/PLL
+  [PASS] L 200W 功率平衡<2%                                  value=0.005347      Pdc=205.30 Pab=204.56 Psw=0.75 Pac=199.92 Ppass=4.63
+  [PASS] L 200W |Idc|<0.028A                             value=-2.498e-05    额定电流 0.5%
+  [PASS] L 200W 幅值误差<2%                                  value=-0.03934      
+  [PASS] L 200W 相位误差<3°                                  value=-0.1743       i_g 相对 u_grid
+  [PASS] L 200W 稳态无限幅                                    value=0             PR/调制/PLL
+  [PASS] LC  70W 功率平衡<2%                                 value=0.02548       Pdc=70.91 Pab=70.71 Psw=0.21 Pac=70.04 Ppass=0.65
+  [PASS] LC  70W |Idc|<0.028A                            value=-0.001047     额定电流 0.5%
+  [PASS] LC  70W 幅值误差<2%                                 value=0.05896       
+  [PASS] LC  70W 相位误差<3°                                 value=-0.228        i_g 相对 u_grid
+  [PASS] LC  70W 稳态无限幅                                   value=0             PR/调制/PLL
+  [PASS] LC 130W 功率平衡<2%                                 value=0.01368       Pdc=132.54 Pab=132.15 Psw=0.39 Pac=130.09 Ppass=2.04
+  [PASS] LC 130W |Idc|<0.028A                            value=0.001125      额定电流 0.5%
+  [PASS] LC 130W 幅值误差<2%                                 value=0.07308       
+  [PASS] LC 130W 相位误差<3°                                 value=-0.2011       i_g 相对 u_grid
+  [PASS] LC 130W 稳态无限幅                                   value=0             PR/调制/PLL
+  [PASS] LC 200W 功率平衡<2%                                 value=0.008836      Pdc=205.62 Pab=204.87 Psw=0.75 Pac=200.14 Ppass=4.71
+  [PASS] LC 200W |Idc|<0.028A                            value=0.00254       额定电流 0.5%
+  [PASS] LC 200W 幅值误差<2%                                 value=0.0714        
+  [PASS] LC 200W 相位误差<3°                                 value=-0.1927       i_g 相对 u_grid
+  [PASS] LC 200W 稳态无限幅                                   value=0             PR/调制/PLL
+  [PASS] L 额定 THD<5%                                     value=1.053         2-50 次谐波
+  [PASS] L 额定 TDD<5%                                     value=1.052         以额定电流为基准
+  [PASS] LC 额定 THD<5%                                    value=1.033         2-50 次谐波
+  [PASS] LC 额定 TDD<5%                                    value=1.033         以额定电流为基准
+  [PASS] LC 谐振不增长 (核心)                                   value=1.262         末 1/4 窗 / 首 1/4 窗
+  [PASS] LC 谐振带 RMS < 基波 5%                              value=1.595         1.2-2.5 kHz
+  [PASS] L0 纹波 vs 仿真 <10%                                value=-4.553        L0=0.15367 A (L+Lg), sim=0.14668 A
+  [PASS] L0 LC 网侧纹波 vs 仿真 <10%                           value=-4.235        L0=0.00222 A, sim=0.00212 A
+  [PASS] PCC L 200W |Idc|<0.028A                         value=-0.001281     PCC 采样，非理想源
+  [PASS] PCC L 200W 相位<3°                                value=0.9145        相对真实电网源
+  [PASS] PCC L 200W THD<5%                               value=1.063         
+  [PASS] PCC L 200W 功率平衡<2%                              value=0.005358      独立 idc/vab
+  [PASS] PCC L 200W Ugc 直流<0.5V                          value=-5.336e-05    RC+峰谷平均后的控制电压
+  [PASS] PCC L 200W 稳态无限幅                                value=0             
+  [PASS] PCC L  70W |Idc|<0.028A                         value=0.0004048     PCC 采样，非理想源
+  [PASS] PCC L  70W 相位<3°                                value=-0.9661       相对真实电网源
+  [PASS] PCC L  70W THD<5%                               value=2.647         
+  [PASS] PCC L  70W 功率平衡<2%                              value=0.01527       独立 idc/vab
+  [PASS] PCC L  70W Ugc 直流<0.5V                          value=2.818e-05     RC+峰谷平均后的控制电压
+  [PASS] PCC L  70W 稳态无限幅                                value=0             
+  [PASS] PCC LC 200W |Idc|<0.028A                        value=-0.001491     PCC 采样，非理想源
+  [PASS] PCC LC 200W 相位<3°                               value=0.9279        相对真实电网源
+  [PASS] PCC LC 200W THD<5%                              value=1.004         
+  [PASS] PCC LC 200W 功率平衡<2%                             value=0.008921      独立 idc/vab
+  [PASS] PCC LC 200W Ugc 直流<0.5V                         value=-4.535e-05    RC+峰谷平均后的控制电压
+  [PASS] PCC LC 200W 稳态无限幅                               value=0             
+  [PASS] PCC LC  70W |Idc|<0.028A                        value=0.0006611     PCC 采样，非理想源
+  [PASS] PCC LC  70W 相位<3°                               value=-0.9495       相对真实电网源
+  [PASS] PCC LC  70W THD<5%                              value=2.786         
+  [PASS] PCC LC  70W 功率平衡<2%                             value=0.02543       独立 idc/vab
+  [PASS] PCC LC  70W Ugc 直流<0.5V                         value=-9.498e-05    RC+峰谷平均后的控制电压
+  [PASS] PCC LC  70W 稳态无限幅                               value=0             
+  [PASS] PCC 200W LC PCC纹波<L/20                          value=69.28         L=18.48 V, LC=0.27 V
+  [PASS] PCC 70W LC PCC纹波<L/20                           value=69.28         L=18.69 V, LC=0.27 V
+  [PASS] PCC极端 Lg=1.0mH Rd=0.0 |Idc|<0.028A              value=-0.001443     
+  [PASS] PCC极端 Lg=1.0mH Rd=0.0 相位<3°                     value=0.9299        
+  [PASS] PCC极端 Lg=1.0mH Rd=0.0 谐振不增长                     value=1.086         1.2-2.5 kHz
+  [PASS] PCC极端 Lg=1.0mH Rd=0.0 功率平衡<2%                   value=-0.02887      
+  [PASS] PCC极端 Lg=1.0mH Rd=0.0 稳态无限幅                     value=0             
+  [PASS] PCC极端 Lg=0.5mH Rd=1.0 |Idc|<0.028A              value=0.001014      
+  [PASS] PCC极端 Lg=0.5mH Rd=1.0 相位<3°                     value=-0.4589       
+  [PASS] PCC极端 Lg=0.5mH Rd=1.0 谐振不增长                     value=0.9791        1.2-2.5 kHz
+  [PASS] PCC极端 Lg=0.5mH Rd=1.0 功率平衡<2%                   value=0.008978      
+  [PASS] PCC极端 Lg=0.5mH Rd=1.0 稳态无限幅                     value=0             
+  [PASS] L Vdc=54V 饱和                                    value=1             L0 预测最小约 55.08 V
+  [PASS] L Vdc=56V 不饱和                                   value=0             
+  [PASS] L Vdc=56V 功率误差<2%                               value=199.9         
+  [PASS] LC Vdc=54V 饱和                                   value=1             L0 预测最小约 55.08 V
+  [PASS] LC Vdc=56V 不饱和                                  value=0             
+  [PASS] LC Vdc=56V 功率误差<2%                              value=200.1         
+  [PASS] L0 最小 Vdc 落在 54-56V                             value=55.38         额定 200 W，含 Rf+Rg
+  [PASS] 运行范围区间宽度 <10%                                   value=3.611         2 V / Vmin
+  [PASS] 谐振时域验证 15 工况                                    value=15            L=1–4 mH × Lg=0.5/1/2 mH
+  [PASS] 谐振 L=1.0 Lg=0.5 误差<10%                          value=-1.777        解析=2516 Hz, 阶跃=2472 Hz
+  [PASS] 谐振 L=1.0 Lg=1.0 误差<10%                          value=-1.396        解析=2055 Hz, 阶跃=2026 Hz
+  [PASS] 谐振 L=1.0 Lg=2.0 误差<10%                          value=-0.2393       解析=1779 Hz, 阶跃=1775 Hz
+  [PASS] 谐振 L=1.5 Lg=0.5 误差<10%                          value=-1.914        解析=2373 Hz, 阶跃=2327 Hz
+  [PASS] 谐振 L=1.5 Lg=1.0 误差<10%                          value=-1.497        解析=1876 Hz, 阶跃=1848 Hz
+  [PASS] 谐振 L=1.5 Lg=2.0 误差<10%                          value=-0.717        解析=1569 Hz, 阶跃=1558 Hz
+  [PASS] 谐振 L=2.0 Lg=0.5 误差<10%                          value=-2.051        解析=2297 Hz, 阶跃=2250 Hz
+  [PASS] 谐振 L=2.0 Lg=1.0 误差<10%                          value=-1.593        解析=1779 Hz, 阶跃=1751 Hz
+  [PASS] 谐振 L=2.0 Lg=2.0 误差<10%                          value=-0.7912       解析=1453 Hz, 阶跃=1441 Hz
+  [PASS] 谐振 L=3.0 Lg=0.5 误差<10%                          value=-2.228        解析=2219 Hz, 阶跃=2170 Hz
+  [PASS] 谐振 L=3.0 Lg=1.0 误差<10%                          value=-1.148        解析=1678 Hz, 阶跃=1658 Hz
+  [PASS] 谐振 L=3.0 Lg=2.0 误差<10%                          value=-0.8353       解析=1326 Hz, 阶跃=1315 Hz
+  [PASS] 谐振 L=4.0 Lg=0.5 误差<10%                          value=-2.341        解析=2179 Hz, 阶跃=2128 Hz
+  [PASS] 谐振 L=4.0 Lg=1.0 误差<10%                          value=-1.227        解析=1624 Hz, 阶跃=1604 Hz
+  [PASS] 谐振 L=4.0 Lg=2.0 误差<10%                          value=-0.8607       解析=1258 Hz, 阶跃=1247 Hz
+  [PASS] f_res 随 Lg 单调下降                                 value=[2250 1751 1441]  L=2 mH
+  [PASS] Rd=0 谐振不增长                                      value=0.9337        LC, 200 W
+  [PASS] Rd=0 功率平衡<2%                                    value=-0.03091      
+  [PASS] Rd=0 THD<5%                                     value=1.17          
+  [PASS] Rd=5 谐振不增长                                      value=1.024         LC, 200 W
+  [PASS] Rd=5 功率平衡<2%                                    value=0.1557        
+  [PASS] Rd=5 THD<5%                                     value=1.065         
+  [PASS] L 扫描 5 值 × L/LC                                 value=10            
+  [PASS] L扫描 L L=1.0mH 功率平衡<2%                           value=0.00801       
+  [PASS] L扫描 L L=1.0mH THD<5%                            value=0.9906        
+  [PASS] L扫描 L L=1.0mH 稳态无限幅                             value=0             
+  [PASS] L扫描 LC L=1.0mH 功率平衡<2%                          value=0.01796       
+  [PASS] L扫描 LC L=1.0mH THD<5%                           value=1.161         
+  [PASS] L扫描 LC L=1.0mH 稳态无限幅                            value=0             
+  [PASS] L扫描 L L=1.5mH 功率平衡<2%                           value=0.006417      
+  [PASS] L扫描 L L=1.5mH THD<5%                            value=1.069         
+  [PASS] L扫描 L L=1.5mH 稳态无限幅                             value=0             
+  [PASS] L扫描 LC L=1.5mH 功率平衡<2%                          value=0.01187       
+  [PASS] L扫描 LC L=1.5mH THD<5%                           value=1.066         
+  [PASS] L扫描 LC L=1.5mH 稳态无限幅                            value=0             
+  [PASS] L扫描 L L=2.0mH 功率平衡<2%                           value=0.005347      
+  [PASS] L扫描 L L=2.0mH THD<5%                            value=1.053         
+  [PASS] L扫描 L L=2.0mH 稳态无限幅                             value=0             
+  [PASS] L扫描 LC L=2.0mH 功率平衡<2%                          value=0.008836      
+  [PASS] L扫描 LC L=2.0mH THD<5%                           value=1.033         
+  [PASS] L扫描 LC L=2.0mH 稳态无限幅                            value=0             
+  [PASS] L扫描 L L=3.0mH 功率平衡<2%                           value=0.004025      
+  [PASS] L扫描 L L=3.0mH THD<5%                            value=0.4547        
+  [PASS] L扫描 L L=3.0mH 稳态无限幅                             value=0             
+  [PASS] L扫描 LC L=3.0mH 功率平衡<2%                          value=0.005938      
+  [PASS] L扫描 LC L=3.0mH THD<5%                           value=0.9407        
+  [PASS] L扫描 LC L=3.0mH 稳态无限幅                            value=0             
+  [PASS] L扫描 L L=4.0mH 功率平衡<2%                           value=0.003214      
+  [PASS] L扫描 L L=4.0mH THD<5%                            value=0.6834        
+  [PASS] L扫描 L L=4.0mH 稳态无限幅                             value=0             
+  [PASS] L扫描 LC L=4.0mH 功率平衡<2%                          value=0.004352      
+  [PASS] L扫描 LC L=4.0mH THD<5%                           value=0.5468        
+  [PASS] L扫描 LC L=4.0mH 稳态无限幅                            value=0             
+  [PASS] L 纹波随 L 单调下降                                    value=[0.2207 0.1763 0.1467 0.1096 0.08723]  
+  [PASS] L=2mH 50Hz 压降<20%                               value=14.54         L+Lg=3mH，作为实验室折中
+  [PASS] 阶跃 L 峰值处阶跃(误差≈ΔIm)                              value=103.8         旧测试过零阶跃只有<1%
+  [PASS] 阶跃 L 上阶跃1-3k振铃<15%                              value=7.959         阶跃后 5 ms
+  [PASS] 阶跃 L 上阶跃振铃5ms衰减<0.2                             value=0.02998       后5ms/前5ms
+  [PASS] 阶跃 L 下阶跃误差≈ΔIm                                  value=105           
+  [PASS] 阶跃 L 下阶跃1-3k振铃<15%                              value=8.548         
+  [PASS] 阶跃 L 下阶跃振铃5ms衰减<0.2                             value=0.03915       
+  [PASS] 阶跃 L 终值回到 70W                                   value=-0.06721      
+  [PASS] 阶跃 LC 峰值处阶跃(误差≈ΔIm)                             value=99.83         旧测试过零阶跃只有<1%
+  [PASS] 阶跃 LC 上阶跃1-3k振铃<15%                             value=9.531         阶跃后 5 ms
+  [PASS] 阶跃 LC 上阶跃振铃5ms衰减<0.2                            value=0.04827       后5ms/前5ms
+  [PASS] 阶跃 LC 下阶跃误差≈ΔIm                                 value=100           
+  [PASS] 阶跃 LC 下阶跃1-3k振铃<15%                             value=11.05         
+  [PASS] 阶跃 LC 下阶跃振铃5ms衰减<0.2                            value=0.0627        
+  [PASS] 阶跃 LC 终值回到 70W                                  value=0.06002       
+  [PASS] LC 阶跃振铃频率(上) vs 解析 <5%                          value=1801          L=2mH/Lg=1mH，模型本身
+  [PASS] LC 阶跃振铃频率(下) vs 解析 <5%                          value=1824          与解析式交叉验证
+  [PASS] L 阶跃振铃频率为 NaN（无 LC 谐振）                          value=1             不能把带通滤波器的过零点当谐振
+  [PASS] 零偏 0 mA 时 Idc≈0                                 value=-2.498e-05    
+  [PASS] 20 mA 零偏时 Idc<0.028A                            value=-0.0186       PR 直流增益仅 Kp
+  [PASS] 50 mA 零偏超过 0.028A（需校准）                          value=-0.04991      硬件上电零偏校准必须做
+  [PASS] 谐波电网 L 200W 电网 THD≈3%                           value=3             
+  [PASS] 谐波电网 L 200W 电流 THD<5%                           value=1.016         
+  [PASS] 谐波电网 L 200W |Idc|<0.028A                        value=0.001642      
+  [PASS] 谐波电网 L 200W 相位<3°                               value=-0.1743       
+  [PASS] 谐波电网 L 200W 功率平衡<2%                             value=0.005356      独立 idc/vab
+  [PASS] 谐波电网 L 200W 稳态无限幅                               value=0             
+  [PASS] 谐波电网 L  70W 电网 THD≈3%                           value=3             
+  [PASS] 谐波电网 L  70W 电流 THD<5%                           value=2.346         
+  [PASS] 谐波电网 L  70W |Idc|<0.028A                        value=-0.0002462    
+  [PASS] 谐波电网 L  70W 相位<3°                               value=-0.2201       
+  [PASS] 谐波电网 L  70W 功率平衡<2%                             value=0.01526       独立 idc/vab
+  [PASS] 谐波电网 L  70W 稳态无限幅                               value=0             
+  [PASS] 谐波电网 LC 200W 电网 THD≈3%                          value=3             
+  [PASS] 谐波电网 LC 200W 电流 THD<5%                          value=1.31          
+  [PASS] 谐波电网 LC 200W |Idc|<0.028A                       value=0.002867      
+  [PASS] 谐波电网 LC 200W 相位<3°                              value=-0.1935       
+  [PASS] 谐波电网 LC 200W 功率平衡<2%                            value=0.008891      独立 idc/vab
+  [PASS] 谐波电网 LC 200W 稳态无限幅                              value=0             
+  [PASS] 谐波电网 LC  70W 电网 THD≈3%                          value=3             
+  [PASS] 谐波电网 LC  70W 电流 THD<5%                          value=3.246         
+  [PASS] 谐波电网 LC  70W |Idc|<0.028A                       value=0.0007723     
+  [PASS] 谐波电网 LC  70W 相位<3°                              value=-0.2177       
+  [PASS] 谐波电网 LC  70W 功率平衡<2%                            value=0.02544       独立 idc/vab
+  [PASS] 谐波电网 LC  70W 稳态无限幅                              value=0             
+  [PASS] 谐波电网 L 200W 电网 THD≈3%                           value=3             
+  [PASS] 谐波电网 L 200W 电流 THD<5%                           value=1.299         
+  [PASS] 谐波电网 L 200W |Idc|<0.028A                        value=-0.0004421    
+  [PASS] 谐波电网 L 200W 相位<3°                               value=0.9124        
+  [PASS] 谐波电网 L 200W 功率平衡<2%                             value=0.005346      独立 idc/vab
+  [PASS] 谐波电网 L 200W 稳态无限幅                               value=0             
+  [PASS] 谐波电网 L  70W 电网 THD≈3%                           value=3             
+  [PASS] 谐波电网 L  70W 电流 THD<5%                           value=2.889         
+  [PASS] 谐波电网 L  70W |Idc|<0.028A                        value=0.0003178     
+  [PASS] 谐波电网 L  70W 相位<3°                               value=-0.9688       
+  [PASS] 谐波电网 L  70W 功率平衡<2%                             value=0.01527       独立 idc/vab
+  [PASS] 谐波电网 L  70W 稳态无限幅                               value=0             
+  [PASS] 谐波电网 LC 200W 电网 THD≈3%                          value=3             
+  [PASS] 谐波电网 LC 200W 电流 THD<5%                          value=1.685         
+  [PASS] 谐波电网 LC 200W |Idc|<0.028A                       value=0.00247       
+  [PASS] 谐波电网 LC 200W 相位<3°                              value=0.9276        
+  [PASS] 谐波电网 LC 200W 功率平衡<2%                            value=0.008894      独立 idc/vab
+  [PASS] 谐波电网 LC 200W 稳态无限幅                              value=0             
+  [PASS] 谐波电网 LC  70W 电网 THD≈3%                          value=3             
+  [PASS] 谐波电网 LC  70W 电流 THD<5%                          value=4.413         
+  [PASS] 谐波电网 LC  70W |Idc|<0.028A                       value=0.001188      
+  [PASS] 谐波电网 LC  70W 相位<3°                              value=-0.9458       
+  [PASS] 谐波电网 LC  70W 功率平衡<2%                            value=0.02541       独立 idc/vab
+  [PASS] 谐波电网 LC  70W 稳态无限幅                              value=0             
+  [PASS] 组合工况 6 个核心点                                     value=6             L/LC × 70/130/200 W
+  [PASS] 组合 L  70W 功率平衡<2%                               value=0.003802      
+  [PASS] 组合 L  70W 稳态无限幅                                 value=0             
+  [PASS] 组合 L  70W TDD<5%                                value=1.126         以额定电流为基准
+  [PASS] 组合 L 130W 功率平衡<2%                               value=0.002138      
+  [PASS] 组合 L 130W 稳态无限幅                                 value=0             
+  [PASS] 组合 L 130W TDD<5%                                value=0.8732        以额定电流为基准
+  [PASS] 组合 L 200W 功率平衡<2%                               value=0.001352      
+  [PASS] 组合 L 200W 稳态无限幅                                 value=0             
+  [PASS] 组合 L 200W TDD<5%                                value=0.7844        以额定电流为基准
+  [PASS] 组合 LC  70W 功率平衡<2%                              value=0.006477      
+  [PASS] 组合 LC  70W 稳态无限幅                                value=0             
+  [PASS] 组合 LC  70W TDD<5%                               value=2.338         以额定电流为基准
+  [PASS] 组合 LC 130W 功率平衡<2%                              value=0.003435      
+  [PASS] 组合 LC 130W 稳态无限幅                                value=0             
+  [PASS] 组合 LC 130W TDD<5%                               value=1.694         以额定电流为基准
+  [PASS] 组合 LC 200W 功率平衡<2%                              value=0.002242      
+  [PASS] 组合 LC 200W 稳态无限幅                                value=0             
+  [PASS] 组合 LC 200W TDD<5%                               value=1.426         以额定电流为基准
+  [PASS] 组合 LC 70W THD>5%（硬件优先项）                         value=6.699         PCC+谐波+IGBT死区+补偿+零偏
+  [PASS] 组合工况全部 |Idc|>0.028A（需校准）                        value=0.0291        20mA 零偏 + 载波峰值采样偏置叠加
+  [PASS] 组合 200W LC PCC纹波<L/20                           value=69.23         L=18.43 V, LC=0.27 V
+  [PASS] 组合 70W LC PCC纹波<L/20                            value=69.24         L=18.63 V, LC=0.27 V
+  [PASS] 峰谷采样组合 6 个核心点                                   value=6             
+  [PASS] 峰谷采样 L  70W |Idc|<0.025A                        value=-0.01882      峰谷平均消除采样偏置
+  [PASS] 峰谷采样 L  70W |Idc|≈18.6mA（只剩零偏）                  value=0.01882       20 mA 传感器零偏
+  [PASS] 峰谷采样 L  70W 功率平衡<2%                             value=0.003801      
+  [PASS] 峰谷采样 L  70W 稳态无限幅                               value=0             
+  [PASS] 峰谷采样 L 130W |Idc|<0.025A                        value=-0.01984      峰谷平均消除采样偏置
+  [PASS] 峰谷采样 L 130W |Idc|≈18.6mA（只剩零偏）                  value=0.01984       20 mA 传感器零偏
+  [PASS] 峰谷采样 L 130W 功率平衡<2%                             value=0.002082      
+  [PASS] 峰谷采样 L 130W 稳态无限幅                               value=0             
+  [PASS] 峰谷采样 L 200W |Idc|<0.025A                        value=-0.01739      峰谷平均消除采样偏置
+  [PASS] 峰谷采样 L 200W |Idc|≈18.6mA（只剩零偏）                  value=0.01739       20 mA 传感器零偏
+  [PASS] 峰谷采样 L 200W 功率平衡<2%                             value=0.001355      
+  [PASS] 峰谷采样 L 200W 稳态无限幅                               value=0             
+  [PASS] 峰谷采样 LC  70W |Idc|<0.025A                       value=-0.02075      峰谷平均消除采样偏置
+  [PASS] 峰谷采样 LC  70W |Idc|≈18.6mA（只剩零偏）                 value=0.02075       20 mA 传感器零偏
+  [PASS] 峰谷采样 LC  70W 功率平衡<2%                            value=0.0065        
+  [PASS] 峰谷采样 LC  70W 稳态无限幅                              value=0             
+  [PASS] 峰谷采样 LC 130W |Idc|<0.025A                       value=-0.01911      峰谷平均消除采样偏置
+  [PASS] 峰谷采样 LC 130W |Idc|≈18.6mA（只剩零偏）                 value=0.01911       20 mA 传感器零偏
+  [PASS] 峰谷采样 LC 130W 功率平衡<2%                            value=0.003438      
+  [PASS] 峰谷采样 LC 130W 稳态无限幅                              value=0             
+  [PASS] 峰谷采样 LC 200W |Idc|<0.025A                       value=-0.01959      峰谷平均消除采样偏置
+  [PASS] 峰谷采样 LC 200W |Idc|≈18.6mA（只剩零偏）                 value=0.01959       20 mA 传感器零偏
+  [PASS] 峰谷采样 LC 200W 功率平衡<2%                            value=0.002246      
+  [PASS] 峰谷采样 LC 200W 稳态无限幅                              value=0             
+  [PASS] 峰谷采样后最大 |Idc| 小于基线                              value=0.02075       基线是单点采样
+  [PASS] 峰谷采样 LC70 THD 仍>5%（需饱和补偿）                       value=7.007         sign(i_ref) 过零仍补满
+  [PASS] 推荐方案组合 6 个核心点                                   value=6             
+  [PASS] 推荐 L  70W THD<5%                                value=2.823         峰谷采样+饱和补偿
+  [PASS] 推荐 L  70W TDD<5%                                value=0.9849        
+  [PASS] 推荐 L  70W |Idc|<0.025A                          value=-0.01824      峰谷平均
+  [PASS] 推荐 L  70W |Idc|≈18.6mA（只剩零偏）                    value=0.01824       20 mA 传感器零偏
+  [PASS] 推荐 L  70W 功率平衡<2%                               value=0.003936      
+  [PASS] 推荐 L  70W 稳态无限幅                                 value=0             
+  [PASS] 推荐 L 130W THD<5%                                value=1.304         峰谷采样+饱和补偿
+  [PASS] 推荐 L 130W TDD<5%                                value=0.846         
+  [PASS] 推荐 L 130W |Idc|<0.025A                          value=-0.01842      峰谷平均
+  [PASS] 推荐 L 130W |Idc|≈18.6mA（只剩零偏）                    value=0.01842       20 mA 传感器零偏
+  [PASS] 推荐 L 130W 功率平衡<2%                               value=0.002213      
+  [PASS] 推荐 L 130W 稳态无限幅                                 value=0             
+  [PASS] 推荐 L 200W THD<5%                                value=0.8409        峰谷采样+饱和补偿
+  [PASS] 推荐 L 200W TDD<5%                                value=0.8399        
+  [PASS] 推荐 L 200W |Idc|<0.025A                          value=-0.01991      峰谷平均
+  [PASS] 推荐 L 200W |Idc|≈18.6mA（只剩零偏）                    value=0.01991       20 mA 传感器零偏
+  [PASS] 推荐 L 200W 功率平衡<2%                               value=0.001354      
+  [PASS] 推荐 L 200W 稳态无限幅                                 value=0             
+  [PASS] 推荐 LC  70W THD<5%                               value=4.841         峰谷采样+饱和补偿
+  [PASS] 推荐 LC  70W TDD<5%                               value=1.689         
+  [PASS] 推荐 LC  70W |Idc|<0.025A                         value=-0.01806      峰谷平均
+  [PASS] 推荐 LC  70W |Idc|≈18.6mA（只剩零偏）                   value=0.01806       20 mA 传感器零偏
+  [PASS] 推荐 LC  70W 功率平衡<2%                              value=0.006404      
+  [PASS] 推荐 LC  70W 稳态无限幅                                value=0             
+  [PASS] 推荐 LC 130W THD<5%                               value=2.11          峰谷采样+饱和补偿
+  [PASS] 推荐 LC 130W TDD<5%                               value=1.369         
+  [PASS] 推荐 LC 130W |Idc|<0.025A                         value=-0.01872      峰谷平均
+  [PASS] 推荐 LC 130W |Idc|≈18.6mA（只剩零偏）                   value=0.01872       20 mA 传感器零偏
+  [PASS] 推荐 LC 130W 功率平衡<2%                              value=0.00345       
+  [PASS] 推荐 LC 130W 稳态无限幅                                value=0             
+  [PASS] 推荐 LC 200W THD<5%                               value=1.297         峰谷采样+饱和补偿
+  [PASS] 推荐 LC 200W TDD<5%                               value=1.295         
+  [PASS] 推荐 LC 200W |Idc|<0.025A                         value=-0.01914      峰谷平均
+  [PASS] 推荐 LC 200W |Idc|≈18.6mA（只剩零偏）                   value=0.01914       20 mA 传感器零偏
+  [PASS] 推荐 LC 200W 功率平衡<2%                              value=0.002177      
+  [PASS] 推荐 LC 200W 稳态无限幅                                value=0             
+  [PASS] 推荐方案 LC70 THD<5%                                value=4.841         基线 6.70% -> 峰谷+饱和
+  [PASS] 推荐方案 LC70 THD<峰谷采样(仅)                           value=-2.165        峰谷=7.01%, 推荐=4.84%
+  [PASS] 推荐方案最大 |Idc|<0.025A                             value=0.01991       20mA 零偏可上电校准
+  [PASS] 全扫描功率平衡<2%                                      value=0.1557        38 工况
+  [PASS] 全扫描 LC 无增长振荡                                    value=1.262         21 个 LC 工况
+  [PASS] PV 标定 Pmp(1000)=200W                            value=200           Vmp=80.00 V, Imp=2.500 A
+  [PASS] PV 标定 Vmp(1000)=80V                             value=80            
+  [PASS] PV 标定 Imp(1000)=2.5A                            value=2.5           
+  [PASS] P&O 判决周期 0.3-1.0s                               value=0.5           >=3-5 倍电压环调节时间
+  [PASS] 电压搜索下限 >=58V                                    value=58            
+  [PASS] 10ms 滑动平均窗                                      value=10            
+  [PASS] 电压环自然频率 5-10Hz                                  value=8.56          小信号 plant -k/(C s)
+  [PASS] 电压环阻尼 0.5-1.2                                   value=0.8068        
+  [PASS] L G=400 PV功率>=98%MPP                            value=99.96         Ppv=68.42/68.44 W, Pac=67.34 W
+  [PASS] L G=400 母线电压 58-92V                             value=80.01         
+  [PASS] L G=400 Vref 在搜索范围                              value=80            
+  [PASS] L G=400 100Hz 已被滑动平均压掉                          value=0.006571      Vdc 100Hz=0.604 V
+  [PASS] L G=400 稳态无限幅                                   value=0             
+  [PASS] L G=400 AC 电流 THD<5%                            value=2.058         
+  [PASS] L G=700 PV功率>=98%MPP                            value=99.9          Ppv=134.63/134.76 W, Pac=131.86 W
+  [PASS] L G=700 母线电压 58-92V                             value=80.01         
+  [PASS] L G=700 Vref 在搜索范围                              value=80            
+  [PASS] L G=700 100Hz 已被滑动平均压掉                          value=0.00654       Vdc 100Hz=1.211 V
+  [PASS] L G=700 稳态无限幅                                   value=0             
+  [PASS] L G=700 AC 电流 THD<5%                            value=1.248         
+  [PASS] L G=1000 PV功率>=98%MPP                           value=99.77         Ppv=199.55/200.00 W, Pac=194.12 W
+  [PASS] L G=1000 母线电压 58-92V                            value=80.01         
+  [PASS] L G=1000 Vref 在搜索范围                             value=80            
+  [PASS] L G=1000 100Hz 已被滑动平均压掉                         value=0.006548      Vdc 100Hz=1.809 V
+  [PASS] L G=1000 稳态无限幅                                  value=0             
+  [PASS] L G=1000 AC 电流 THD<5%                           value=1.054         
+  [PASS] LC G=1000 PV功率>=98%MPP                          value=99.77         Ppv=199.55/200.00 W, Pac=194.04 W
+  [PASS] LC G=1000 母线电压 58-92V                           value=80.01         
+  [PASS] LC G=1000 Vref 在搜索范围                            value=80            
+  [PASS] LC G=1000 100Hz 已被滑动平均压掉                        value=0.006515      Vdc 100Hz=1.802 V
+  [PASS] LC G=1000 稳态无限幅                                 value=0             
+  [PASS] LC G=1000 AC 电流 THD<5%                          value=1.061         
+  [PASS] 阶跃后 PV功率>=98%MPP                                value=99.93         Ppv=112.68/112.76 W
+  [PASS] 阶跃后 2.5s 内重新收敛                                  value=0.1           0.1 s 滑动平均达到 98% MPP 并保持 0.5 s
+  [PASS] 阶跃后母线电压在范围                                      value=80.01         
+  [PASS] 阶跃后稳态无限幅                                        value=0             
+  [PASS] 远起点 V0=62V 收敛到>=98%MPP                          value=99.68         Ppv=199.36/200.00 W
+  [PASS] 远起点 V0=62V 收敛时间<12s                             value=7.016         
+  [PASS] 远起点 V0=62V 母线电压在范围                              value=78.99         
+  [PASS] 远起点 V0=62V 稳态无限幅                                value=0             
+  [PASS] 远起点 V0=90V 收敛到>=98%MPP                          value=99.68         Ppv=199.36/200.00 W
+  [PASS] 远起点 V0=90V 收敛时间<8s                              value=4.548         
+  [PASS] 远起点 V0=90V 母线电压在范围                              value=78.99         
+  [PASS] 远起点 V0=90V 稳态无限幅                                value=0             
+  [PASS] 温度阶跃后 >=98%MPP                                  value=99.76         Ppv=196.34/196.80 W
+  [PASS] 温度阶跃 3s 内收敛                                     value=1.026         
+  [PASS] 温度阶跃后 Vref 跟随 MPP 电压                            value=-0.1957       Vref=76.00, Vmp(50C)=76.20
+  [PASS] 温度阶跃后母线电压在范围                                    value=76.01         
+  [PASS] 死区归一化 2*Td/Tsw=0.04                             value=0.04          全桥双极性两个桥臂
+  [PASS] 死区电压误差 2*Vdc*Td/Tsw                             value=3.2           理论平均
+  [PASS] 控制器配置无死区项                                       value=0             死区只在功率级
+  [PASS] 生成的 cfg_L 无死区项                                  value=0             
+  [PASS] 补偿饱和阈值 L=0.333A                                 value=0.3333        Vdc/(4(L+Lg)fsw)
+  [PASS] 补偿饱和阈值 LC=0.5A                                  value=0.5           Vdc/(4Lfsw)
+  [PASS] 饱和补偿 i_ref=0 时补 0                               value=0             
+  [PASS] 饱和补偿 i_sat/2 时补一半                               value=0.02          
+  [PASS] 饱和补偿 |i_ref|>i_sat 时补满                          value=0.04          
+  [PASS] sign 补偿 i_ref=i_sat/2 时补满                       value=0.04          旧做法
+  [PASS] PWM Nd=0 无 blanking、duty=0.75                   value=0.75          
+  [PASS] PWM Nd=1 每次换流封锁 1 拍                             value=[1;1;1;1;1;1]  3 周期内换流 6 次
+  [PASS] PWM Nd=1 duty 扣减正确                              value=0.745         每周期两次换流
+  [PASS] PWM Nd=2 每次换流封锁 2 拍                             value=[2;2;2;2;2;2]  3 周期内换流 6 次
+  [PASS] PWM Nd=2 duty 扣减正确                              value=0.74          每周期两次换流
+  [PASS] PWM Nd=4 每次换流封锁 4 拍                             value=[4;4;4;4;4;4]  3 周期内换流 6 次
+  [PASS] PWM Nd=4 duty 扣减正确                              value=0.73          每周期两次换流
+  [PASS] PWM Nd=6 每次换流封锁 6 拍                             value=[6;6;6;6;6;6]  3 周期内换流 6 次
+  [PASS] PWM Nd=6 duty 扣减正确                              value=0.72          每周期两次换流
+  [PASS] 平均3.2V L  70W |Idc|<0.028A                      value=0.0007495     
+  [PASS] 平均3.2V L  70W 幅值误差<2%                           value=-0.4947       
+  [PASS] 平均3.2V L  70W 相位<3°                             value=-0.2143       
+  [PASS] 平均3.2V L  70W 功率平衡<2%                           value=0.003841      独立 idc/vab
+  [PASS] 平均3.2V L  70W 稳态无限幅                             value=0             
+  [PASS] 平均3.2V LC  70W |Idc|<0.028A                     value=0.001492      
+  [PASS] 平均3.2V LC  70W 幅值误差<2%                          value=-0.3862       
+  [PASS] 平均3.2V LC  70W 相位<3°                            value=-0.2442       
+  [PASS] 平均3.2V LC  70W 功率平衡<2%                          value=0.006424      独立 idc/vab
+  [PASS] 平均3.2V LC  70W 稳态无限幅                            value=0             
+  [PASS] 平均3.2V L 200W |Idc|<0.028A                      value=5.78e-05      
+  [PASS] 平均3.2V L 200W 幅值误差<2%                           value=-0.2028       
+  [PASS] 平均3.2V L 200W 相位<3°                             value=-0.1779       
+  [PASS] 平均3.2V L 200W 功率平衡<2%                           value=0.001346      独立 idc/vab
+  [PASS] 平均3.2V L 200W 稳态无限幅                             value=0             
+  [PASS] 平均3.2V LC 200W |Idc|<0.028A                     value=0.002033      
+  [PASS] 平均3.2V LC 200W 幅值误差<2%                          value=-0.08994      
+  [PASS] 平均3.2V LC 200W 相位<3°                            value=-0.198        
+  [PASS] 平均3.2V LC 200W 功率平衡<2%                          value=0.002243      独立 idc/vab
+  [PASS] 平均3.2V LC 200W 稳态无限幅                            value=0             
+  [PASS] 平均+补偿 L  70W |Idc|<0.028A                       value=-0.0004412    
+  [PASS] 平均+补偿 L  70W 幅值误差<2%                            value=-0.04147      
+  [PASS] 平均+补偿 L  70W 相位<3°                              value=-0.2154       
+  [PASS] 平均+补偿 L  70W 功率平衡<2%                            value=0.003836      独立 idc/vab
+  [PASS] 平均+补偿 L  70W 稳态无限幅                              value=0             
+  [PASS] 平均+补偿 LC  70W |Idc|<0.028A                      value=0.0024        
+  [PASS] 平均+补偿 LC  70W 幅值误差<2%                           value=0.06567       
+  [PASS] 平均+补偿 LC  70W 相位<3°                             value=-0.2241       
+  [PASS] 平均+补偿 LC  70W 功率平衡<2%                           value=0.006261      独立 idc/vab
+  [PASS] 平均+补偿 LC  70W 稳态无限幅                             value=0             
+  [PASS] 平均+补偿 L 200W |Idc|<0.028A                       value=-0.0001646    
+  [PASS] 平均+补偿 L 200W 幅值误差<2%                            value=-0.04355      
+  [PASS] 平均+补偿 L 200W 相位<3°                              value=-0.176        
+  [PASS] 平均+补偿 L 200W 功率平衡<2%                            value=0.00135       独立 idc/vab
+  [PASS] 平均+补偿 L 200W 稳态无限幅                              value=0             
+  [PASS] 平均+补偿 LC 200W |Idc|<0.028A                      value=0.001877      
+  [PASS] 平均+补偿 LC 200W 幅值误差<2%                           value=0.0704        
+  [PASS] 平均+补偿 LC 200W 相位<3°                             value=-0.1943       
+  [PASS] 平均+补偿 LC 200W 功率平衡<2%                           value=0.002204      独立 idc/vab
+  [PASS] 平均+补偿 LC 200W 稳态无限幅                             value=0             
+  [PASS] 真实IGBT L  70W |Idc|<0.028A                      value=-0.01073      
+  [PASS] 真实IGBT L  70W 幅值误差<2%                           value=-0.8015       
+  [PASS] 真实IGBT L  70W 相位<3°                             value=-0.2245       
+  [PASS] 真实IGBT L  70W 功率平衡<2%                           value=0.003957      独立 idc/vab
+  [PASS] 真实IGBT L  70W 稳态无限幅                             value=0             
+  [PASS] 真实IGBT LC  70W |Idc|<0.028A                     value=-0.01544      
+  [PASS] 真实IGBT LC  70W 幅值误差<2%                          value=-0.8391       
+  [PASS] 真实IGBT LC  70W 相位<3°                            value=-0.2664       
+  [PASS] 真实IGBT LC  70W 功率平衡<2%                          value=0.006424      独立 idc/vab
+  [PASS] 真实IGBT LC  70W 稳态无限幅                            value=0             
+  [PASS] 真实IGBT L 200W |Idc|<0.028A                      value=-0.01212      
+  [PASS] 真实IGBT L 200W 幅值误差<2%                           value=-0.318        
+  [PASS] 真实IGBT L 200W 相位<3°                             value=-0.1857       
+  [PASS] 真实IGBT L 200W 功率平衡<2%                           value=0.001367      独立 idc/vab
+  [PASS] 真实IGBT L 200W 稳态无限幅                             value=0             
+  [PASS] 真实IGBT LC 200W |Idc|<0.028A                     value=-0.01686      
+  [PASS] 真实IGBT LC 200W 幅值误差<2%                          value=-0.2558       
+  [PASS] 真实IGBT LC 200W 相位<3°                            value=-0.2076       
+  [PASS] 真实IGBT LC 200W 功率平衡<2%                          value=0.002251      独立 idc/vab
+  [PASS] 真实IGBT LC 200W 稳态无限幅                            value=0             
+  [PASS] 真实+补偿0.04 L  70W |Idc|<0.028A                   value=-0.01257      
+  [PASS] 真实+补偿0.04 L  70W 幅值误差<2%                        value=-0.3516       
+  [PASS] 真实+补偿0.04 L  70W 相位<3°                          value=-0.2287       
+  [PASS] 真实+补偿0.04 L  70W 功率平衡<2%                        value=0.004013      独立 idc/vab
+  [PASS] 真实+补偿0.04 L  70W 稳态无限幅                          value=0             
+  [PASS] 真实+补偿0.04 LC  70W |Idc|<0.028A                  value=-0.0166       
+  [PASS] 真实+补偿0.04 LC  70W 幅值误差<2%                       value=-0.3949       
+  [PASS] 真实+补偿0.04 LC  70W 相位<3°                         value=-0.2436       
+  [PASS] 真实+补偿0.04 LC  70W 功率平衡<2%                       value=0.006326      独立 idc/vab
+  [PASS] 真实+补偿0.04 LC  70W 稳态无限幅                         value=0             
+  [PASS] 真实+补偿0.04 L 200W |Idc|<0.028A                   value=-0.01118      
+  [PASS] 真实+补偿0.04 L 200W 幅值误差<2%                        value=-0.1562       
+  [PASS] 真实+补偿0.04 L 200W 相位<3°                          value=-0.184        
+  [PASS] 真实+补偿0.04 L 200W 功率平衡<2%                        value=0.001384      独立 idc/vab
+  [PASS] 真实+补偿0.04 L 200W 稳态无限幅                          value=0             
+  [PASS] 真实+补偿0.04 LC 200W |Idc|<0.028A                  value=-0.01687      
+  [PASS] 真实+补偿0.04 LC 200W 幅值误差<2%                       value=-0.09561      
+  [PASS] 真实+补偿0.04 LC 200W 相位<3°                         value=-0.2063       
+  [PASS] 真实+补偿0.04 LC 200W 功率平衡<2%                       value=0.002238      独立 idc/vab
+  [PASS] 真实+补偿0.04 LC 200W 稳态无限幅                         value=0             
+  [PASS] 真实+补偿0.027(失配) L  70W |Idc|<0.028A              value=-0.01095      
+  [PASS] 真实+补偿0.027(失配) L  70W 幅值误差<2%                   value=-0.4965       
+  [PASS] 真实+补偿0.027(失配) L  70W 相位<3°                     value=-0.2264       
+  [PASS] 真实+补偿0.027(失配) L  70W 功率平衡<2%                   value=0.003983      独立 idc/vab
+  [PASS] 真实+补偿0.027(失配) L  70W 稳态无限幅                     value=0             
+  [PASS] 真实+补偿0.027(失配) LC  70W |Idc|<0.028A             value=-0.01629      
+  [PASS] 真实+补偿0.027(失配) LC  70W 幅值误差<2%                  value=-0.5407       
+  [PASS] 真实+补偿0.027(失配) LC  70W 相位<3°                    value=-0.2501       
+  [PASS] 真实+补偿0.027(失配) LC  70W 功率平衡<2%                  value=0.006285      独立 idc/vab
+  [PASS] 真实+补偿0.027(失配) LC  70W 稳态无限幅                    value=0             
+  [PASS] 真实+补偿0.027(失配) L 200W |Idc|<0.028A              value=-0.01274      
+  [PASS] 真实+补偿0.027(失配) L 200W 幅值误差<2%                   value=-0.2089       
+  [PASS] 真实+补偿0.027(失配) L 200W 相位<3°                     value=-0.1836       
+  [PASS] 真实+补偿0.027(失配) L 200W 功率平衡<2%                   value=0.001372      独立 idc/vab
+  [PASS] 真实+补偿0.027(失配) L 200W 稳态无限幅                     value=0             
+  [PASS] 真实+补偿0.027(失配) LC 200W |Idc|<0.028A             value=-0.01675      
+  [PASS] 真实+补偿0.027(失配) LC 200W 幅值误差<2%                  value=-0.1465       
+  [PASS] 真实+补偿0.027(失配) LC 200W 相位<3°                    value=-0.2078       
+  [PASS] 真实+补偿0.027(失配) LC 200W 功率平衡<2%                  value=0.00225       独立 idc/vab
+  [PASS] 真实+补偿0.027(失配) LC 200W 稳态无限幅                    value=0             
+  [PASS] 真实+0.04饱和补偿 L  70W |Idc|<0.028A                 value=-0.0111       
+  [PASS] 真实+0.04饱和补偿 L  70W 幅值误差<2%                      value=-0.3483       
+  [PASS] 真实+0.04饱和补偿 L  70W 相位<3°                        value=-0.2244       
+  [PASS] 真实+0.04饱和补偿 L  70W 功率平衡<2%                      value=0.003908      独立 idc/vab
+  [PASS] 真实+0.04饱和补偿 L  70W 稳态无限幅                        value=0             
+  [PASS] 真实+0.04饱和补偿 LC  70W |Idc|<0.028A                value=-0.01655      
+  [PASS] 真实+0.04饱和补偿 LC  70W 幅值误差<2%                     value=-0.3932       
+  [PASS] 真实+0.04饱和补偿 LC  70W 相位<3°                       value=-0.2486       
+  [PASS] 真实+0.04饱和补偿 LC  70W 功率平衡<2%                     value=0.006428      独立 idc/vab
+  [PASS] 真实+0.04饱和补偿 LC  70W 稳态无限幅                       value=0             
+  [PASS] 真实+0.04饱和补偿 L 200W |Idc|<0.028A                 value=-0.01217      
+  [PASS] 真实+0.04饱和补偿 L 200W 幅值误差<2%                      value=-0.1567       
+  [PASS] 真实+0.04饱和补偿 L 200W 相位<3°                        value=-0.1839       
+  [PASS] 真实+0.04饱和补偿 L 200W 功率平衡<2%                      value=0.00137       独立 idc/vab
+  [PASS] 真实+0.04饱和补偿 L 200W 稳态无限幅                        value=0             
+  [PASS] 真实+0.04饱和补偿 LC 200W |Idc|<0.028A                value=-0.01524      
+  [PASS] 真实+0.04饱和补偿 LC 200W 幅值误差<2%                     value=-0.0972       
+  [PASS] 真实+0.04饱和补偿 LC 200W 相位<3°                       value=-0.2057       
+  [PASS] 真实+0.04饱和补偿 LC 200W 功率平衡<2%                     value=0.002195      独立 idc/vab
+  [PASS] 真实+0.04饱和补偿 LC 200W 稳态无限幅                       value=0             
+  [PASS] 平均3.2V L  70W THD>5% (问题)                       value=7.751         3.2 V 未补偿
+  [PASS] 平均3.2V LC  70W THD>5% (问题)                      value=8.261         3.2 V 未补偿
+  [PASS] 平均3.2V L 200W THD<5%                            value=3.139         
+  [PASS] 平均3.2V LC 200W THD<5%                           value=3.318         
+  [PASS] 平均+补偿 L  70W THD<5%                             value=0.9991        补偿 2*Td/Tsw
+  [PASS] 平均+补偿 LC  70W THD<5%                            value=1.254         补偿 2*Td/Tsw
+  [PASS] 平均+补偿 L 200W THD<5%                             value=0.3423        补偿 2*Td/Tsw
+  [PASS] 平均+补偿 LC 200W THD<5%                            value=0.3768        补偿 2*Td/Tsw
+  [PASS] 真实IGBT L  70W THD>5% (未补偿，问题)                   value=6.068         修正后有效死区≈3.2 V
+  [PASS] 真实IGBT LC  70W THD>5% (未补偿，问题)                  value=5.636         修正后有效死区≈3.2 V
+  [PASS] 真实IGBT L 200W THD<5%                            value=2.944         
+  [PASS] 真实IGBT LC 200W THD<5%                           value=2.907         
+  [PASS] 真实+补偿0.04 L  70W THD<5%                         value=2.619         补偿 2*Td/Tsw=0.04
+  [PASS] 真实+补偿0.04 LC  70W THD>5% (i_ref 符号失配，问题)        value=5.348         桥臂误差 3.2 V 但 sign(i_ref) 前馈在 LC 低功率失配
+  [PASS] 真实+补偿0.04 L 200W THD<5%                         value=0.3985        补偿 2*Td/Tsw=0.04
+  [PASS] 真实+补偿0.04 LC 200W THD<5%                        value=0.8665        补偿 2*Td/Tsw=0.04
+  [PASS] 真实+补偿0.027 L  70W THD<5%                        value=2.431         0.027 是 THD 整定值，不是桥臂实测
+  [PASS] 真实+补偿0.027 LC  70W THD<5%                       value=4.028         0.027 是 THD 整定值，不是桥臂实测
+  [PASS] 真实+补偿0.027 L 200W THD<5%                        value=1.06          0.027 是 THD 整定值，不是桥臂实测
+  [PASS] 真实+补偿0.027 LC 200W THD<5%                       value=1.209         0.027 是 THD 整定值，不是桥臂实测
+  [PASS] L 70W：0.027 THD<0.04（需实测整定）                     value=-0.1874       0.04=2.62%, 0.027=2.43%
+  [PASS] LC 70W：0.027 THD<0.04（需实测整定）                    value=-1.32         0.04=5.35%, 0.027=4.03%
+  [PASS] 真实+0.04饱和 L  70W THD<5%                         value=1.53          sat(i_ref/i_sat)
+  [PASS] 真实+0.04饱和 LC  70W THD<5%                        value=2.674         sat(i_ref/i_sat)
+  [PASS] 真实+0.04饱和 L 200W THD<5%                         value=0.3484        sat(i_ref/i_sat)
+  [PASS] 真实+0.04饱和 LC 200W THD<5%                        value=0.6408        sat(i_ref/i_sat)
+  [PASS] LC 70W：饱和补偿 THD<sign 补偿                         value=-2.674        sign=5.35%, sat=2.67%
+  [PASS] 主模型有效死区 L  70W K_eff≈3.2V                       value=3.186         基波法，扣除 2*Ron*i
+  [PASS] 主模型有效死区 L  70W Td_eff≈1us                       value=0.9956        Nd=4 @ 0.25 us
+  [PASS] 主模型有效死区 L  70W 真实 Idc<0.028A                    value=-0.01085      
+  [PASS] 主模型有效死区 L  70W 控制器采样电流 Idc≈0                    value=0.001011      PR 把采样值调到零
+  [PASS] 主模型有效死区 L  70W 采样偏置>5mA（机理已定位）                  value=0.01186       载波峰值单点采样落在死区/拖尾波形上
+  [PASS] 主模型有效死区 L 200W K_eff≈3.2V                       value=3.264         基波法，扣除 2*Ron*i
+  [PASS] 主模型有效死区 L 200W Td_eff≈1us                       value=1.02          Nd=4 @ 0.25 us
+  [PASS] 主模型有效死区 L 200W 真实 Idc<0.028A                    value=-0.01189      
+  [PASS] 主模型有效死区 L 200W 控制器采样电流 Idc≈0                    value=0.000814      PR 把采样值调到零
+  [PASS] 主模型有效死区 L 200W 采样偏置>5mA（机理已定位）                  value=0.0127        载波峰值单点采样落在死区/拖尾波形上
+  [PASS] 主模型有效死区 LC  70W K_eff≈3.2V                      value=3.156         基波法，扣除 2*Ron*i
+  [PASS] 主模型有效死区 LC  70W Td_eff≈1us                      value=0.9863        Nd=4 @ 0.25 us
+  [PASS] 主模型有效死区 LC  70W 真实 Idc<0.028A                   value=-0.01532      
+  [PASS] 主模型有效死区 LC  70W 控制器采样电流 Idc≈0                   value=0.0007459     PR 把采样值调到零
+  [PASS] 主模型有效死区 LC  70W 采样偏置>5mA（机理已定位）                 value=0.01607       载波峰值单点采样落在死区/拖尾波形上
+  [PASS] 主模型有效死区 LC 200W K_eff≈3.2V                      value=3.253         基波法，扣除 2*Ron*i
+  [PASS] 主模型有效死区 LC 200W Td_eff≈1us                      value=1.016         Nd=4 @ 0.25 us
+  [PASS] 主模型有效死区 LC 200W 真实 Idc<0.028A                   value=-0.0172       
+  [PASS] 主模型有效死区 LC 200W 控制器采样电流 Idc≈0                   value=0.0004884     PR 把采样值调到零
+  [PASS] 主模型有效死区 LC 200W 采样偏置>5mA（机理已定位）                 value=0.01769       载波峰值单点采样落在死区/拖尾波形上
+  [PASS] 真实IGBT L  70W 开关纹波与L3一致                         value=0.03764       L3=0.14855, L5=0.14860 A
+  [PASS] 真实IGBT LC  70W 开关纹波与L3一致                        value=-0.3029       L3=0.00215, L5=0.00215 A
+  [PASS] 真实IGBT L 200W 开关纹波与L3一致                         value=0.05833       L3=0.14668, L5=0.14676 A
+  [PASS] 真实IGBT LC 200W 开关纹波与L3一致                        value=-0.1483       L3=0.00212, L5=0.00212 A
+  [PASS] 真实IGBT LC 开关频段衰减 >20x                           value=69.18         L=0.1468 A, LC=0.0021 A
+  [PASS] 真实IGBT LC 无增长振荡                                 value=1.086         
