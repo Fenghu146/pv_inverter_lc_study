@@ -7,13 +7,33 @@
 
 | 阶段 | 内容 | 状态 |
 |---|---|---|
-| 0 | 环境（Python 3.14 + scipy/matplotlib/control；MATLAB R2026b + Simulink + Simscape Electrical；Git；gcc） | ✅ |
-| 1 | 参数设计 S1–S3（L 扫描、LC 谐振、稳定性判据） | ✅ |
-| 2 | 仿真 S4–S6（三功率点对比、动态、MPPT） | ✅ |
+| 0 | 环境（Python 3.13 + scipy/matplotlib；**MATLAB R2023a Update 8（学校同款，D:\MATLAB）** + Simulink + Simscape Electrical + Control/Signal Toolbox；Git；gcc） | ✅ |
+| 1 | 参数设计 S1–S3（L 扫描、LC 谐振、稳定性判据，解析计算） | ✅ |
+| 2 | 仿真 S4–S6（旧 Python 开关级） | ⚠️ **已被 merged/ 取代**：开关级 PWM 脉宽量化伪影导致 THD 虚高（详见 merged/README），时域结论以 merged/ A2–A4 为准；解析结论 S2/S3 仍有效 |
 | 3 | 数据分析工具链（THD/纹波/40kHz 统一口径，Python + MATLAB 双实现） | ✅ |
 | 4 | DSP 算法层 C 代码 + PC 单元测试（gcc 编译全过） | ✅ |
-| 5 | Simulink 模型构建脚本 | ✅ 框架 |
+| 5 | **统一验证版**：merged/（平均模型 A0–A4）+ R2023a 开关模型（607 项 ALL PASS） | ✅ 见下方"统一版本说明" |
 | 6 | 硬件联调与实验 E1–E10 | ⏳ 待硬件 |
+
+## 统一版本说明（2026-10-27 版本统一）
+
+**主版本 = 经过验证的 R2023a 合并版**：
+
+- `merged/` —— 合并仿真管线（纯 Python，任何机器可跑）：对方控制算法移植 + 统一参数，
+  A0–A4 数据与图（results/），README/对齐报告/复现指南齐全；
+- `matlab/PV_LC_models_R2023a/` —— 对方 28 个开关模型在 R2023a 上重建的**原生版本**
+  （本机 verify_all 607/607 ALL PASS，run_l3('core') 与 git 基准逐位一致）；
+- 复现入口：`python merged/run_tasks.py`（合并版）；
+  `merged/对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）。
+
+**参考存档**（不再维护，仅供版本对照）：
+
+- `matlab/archive_R2026b_pv_inverter_L_LC.slx` —— 我方 R2026b 框架模型（R2023a 打不开）；
+- 对方仓库 `models_R2024b_backup/` —— R2024b 原始模型（R2023a 打不开，重建成 R2023a 后保留）。
+
+**已清除的失效产物**：旧 Python 开关级输出的 S1/S4/S5/S6 图与 sim_summary* 表
+（THD 23–30% 为 PWM 量化伪影，非物理）、对应的 data/sim_results* CSV、
+以及未经核验的 R2023b 降级导出件（已被 R2023a 原生重建取代）。
 
 ## 快速开始
 
