@@ -38,5 +38,6 @@ Thumbs.db
 # 仿真脚本运行日志
 matlab/*.log
 
-# merged 版运行日志（run_tasks.py 一键重生成）
-merged/*.log
+# 仿真运行日志（run_tasks.py 一键重生成）
+python/*.log
+archive/*.log

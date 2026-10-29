@@ -21,8 +21,8 @@ from engine import run_case, pv_mpp, pv_current
 from metrics import window_metrics
 import analytic
 
-TAB = os.path.join(HERE, "results", "tables")
-FIG = os.path.join(HERE, "results", "figures")
+TAB = os.path.join(HERE, "..", "results", "tables")
+FIG = os.path.join(HERE, "..", "results", "figures")
 os.makedirs(TAB, exist_ok=True)
 os.makedirs(FIG, exist_ok=True)
 

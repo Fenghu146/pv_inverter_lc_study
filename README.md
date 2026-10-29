@@ -17,23 +17,27 @@
 
 ## 统一版本说明（2026-10-27 版本统一）
 
-**主版本 = 经过验证的 R2023a 合并版**：
+**主版本 = 经过验证的 R2023a 合并版（2026-10-29 结构统一后，合并版已并入根目录）**：
 
-- `merged/` —— 合并仿真管线（纯 Python，任何机器可跑）：对方控制算法移植 + 统一参数，
-  A0–A4 数据与图（results/），README/对齐报告/复现指南齐全；
+- `python/params_merged.py + engine.py + metrics.py + analytic.py + run_tasks.py`
+  —— 合并仿真管线（纯 Python，任何机器可跑）：对方控制算法移植 + 统一参数，
+  一键重生成 `results/` 下的 A0–A4 数据与图；
 - `matlab/PV_LC_models_R2023a/` —— 对方 28 个开关模型在 R2023a 上重建的**原生版本**
   （本机 verify_all 607/607 ALL PASS，run_l3('core') 与 git 基准逐位一致）；
-- 复现入口：`python merged/run_tasks.py`（合并版）；
-  `merged/对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）。
+- `matlab/reference_PV_LC_2023a/` —— 对方控制源码存档（control/*.m + project_params.m + 结论报告）；
+- `docs/07–10` —— 合并版说明 / 对齐验证报告 / R2023a 复现指南 / 607 项 PASS 明细；
+- 复现入口：`python python/run_tasks.py`（合并管线）；
+  `docs/08_对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）。
 
 **参考存档**（不再维护，仅供版本对照）：
 
 - `matlab/archive_R2026b_pv_inverter_L_LC.slx` —— 我方 R2026b 框架模型（R2023a 打不开）；
 - 对方仓库 `models_R2024b_backup/` —— R2024b 原始模型（R2023a 打不开，重建成 R2023a 后保留）。
 
-**已清除的失效产物**：旧 Python 开关级输出的 S1/S4/S5/S6 图与 sim_summary* 表
-（THD 23–30% 为 PWM 量化伪影，非物理）、对应的 data/sim_results* CSV、
-以及未经核验的 R2023b 降级导出件（已被 R2023a 原生重建取代）。
+**已归档/清除**：旧 Python 开关级管线（`archive/python_old_sim/`，含 PWM 量化伪影）、
+我方 R2026b 框架模型（`archive/R2026b_pv_inverter_L_LC.slx`）；旧管线输出的
+S1/S4/S5/S6 图与 sim_summary* 表（THD 23–30% 为伪影，非物理）已删除；
+未经核验的 R2023b 降级导出件已被 R2023a 原生重建取代，一并删除。
 
 ## 快速开始
 
@@ -57,39 +61,33 @@ gcc -std=c99 -O2 -I include tests\test_control.c src\*.c -o tests\test_control.e
 # >> build_simulink_model   % 模型框架，ee_lib 连线按注释完成
 ```
 
-## 目录结构
+## 目录结构（2026-10-29 结构统一后）
 
 ```
 pv_inverter_lc_study/
-├── params/params.json            # 参数单一数据源（与报告附录A一致）
-├── python/
-│   ├── design/param_design.py    # S1–S3 参数设计与理论计算
-│   ├── sim/
-│   │   ├── pv_model.py           # PV 单二极管模型(标定 Voc90/Isc2.9/Vmpp75)
-│   │   ├── control_algos.py      # SOGI-PLL/PR/PI/P&O/保护/状态机(与C同参)
-│   │   ├── inverter_sim.py       # 开关级(含死区)+平均模型时域仿真器
-│   │   └── run_sim_tasks.py      # S1–S6 任务运行器
-│   ├── analysis/metrics.py       # THD/纹波/40kHz 统一口径
-│   └── tests/test_metrics.py     # 合成信号口径验证(7用例)
-├── matlab/
-│   ├── thd_metrics.m             # 同口径 MATLAB 实现(纯base MATLAB)
-│   ├── process_scope_csv.m       # 实测/仿真 CSV 批处理
-│   └── build_simulink_model.m    # Simulink 模型框架(R2026b ee_lib)
-├── dsp/                          # C2000 硬件无关算法层(gcc 可编译)
-│   ├── include/ src/ tests/
-│   └── README.md                 # 移植说明
-├── data/
-│   ├── sim_results/              # 仿真CSV(不入库, 运行 run_sim_tasks.py 一键重生成)
-│   └── experiments/              # 实测数据(待硬件, 命名 E{编号}_{L|LC}_{功率点}_{次数}_{日期}.csv)
-├── results/
-│   ├── figures/                  # 8 张图(S1–S6+参数设计)
-│   └── tables/                   # 汇总表
-└── docs/
-    ├── 01_implementation_plan.md # 软件先行实施计划(阶段0–6)
-    ├── 02_experiment_protocol.md # E1–E10 实验矩阵/公平性清单/记录表
-    ├── 03_deliverables.md        # 交付物对照表
-    ├── 04_risk_and_safety.md     # 风险与安全规程
-    └── 05_acceptance_report.md   # 本次验收报告
+├── params/params.json            # 《实现方案》参数（param_design.py 设计探索用；验证版参数在 python/params_merged.py）
+├── python/                       # ★ 正式仿真管线（2023a 验证版，纯 Python）
+│   ├── params_merged.py          #   统一参数源（对方验证设计值，逐项标注出处）
+│   ├── engine.py                 #   对方控制算法逐行移植 + 平均功率级 + 死区误差注入
+│   ├── metrics.py / analytic.py  #   THD(2-50)/TDD 口径 + LCL 谐振/衰减解析
+│   ├── run_tasks.py              #   A0–A4 一键重生成 results/
+│   └── design/param_design.py    #   S1–S3 参数设计探索（解析）
+├── matlab/                       # ★ MATLAB 侧（2023a 正式版）
+│   ├── PV_LC_models_R2023a/      #   对方 28 个开关模型 R2023a 原生版（607 项 ALL PASS）
+│   ├── reference_PV_LC_2023a/    #   对方控制源码存档（含结论报告）
+│   ├── thd_metrics.m             #   THD 口径 MATLAB 实现
+│   ├── process_scope_csv.m       #   实测 CSV 批处理（实验阶段用）
+│   └── build_simulink_model.m    #   我方框架模型生成脚本
+├── dsp/                          # C2000 算法层 C 代码（gcc/TI 编译通过）
+├── results/                      # figures/ + tables/（解析产物 + A0–A4 验证数据共存）
+├── data/                         # experiments/（实验阶段）+ sim_results/（重生成用）
+├── docs/                         # 01–06 计划/规程 + 07–10 合并版说明/对齐报告/复现指南/607 明细
+├── archive/                      # 参考存档（不再维护）
+│   ├── python_old_sim/           #   旧 Python 开关级（PWM 量化伪影版）
+│   ├── python_old_analysis/      #   旧口径实现与测试
+│   ├── python_old_tests/
+│   └── R2026b_pv_inverter_L_LC.slx
+└── 对方仓库（Desktop\大创\仿真\仿真）  # PV_LC_project：models/=R2023a 重建版，models_R2024b_backup/=R2024b 存档
 ```
 
 ## 统一口径（与报告 6.3/7.4 严格一致）
