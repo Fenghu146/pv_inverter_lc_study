@@ -14,6 +14,7 @@
 | 4 | DSP 算法层 C 代码 + PC 单元测试（gcc 编译全过） | ✅ |
 | 5 | **统一验证版**：merged/（平均模型 A0–A4）+ R2023a 开关模型（607 项 ALL PASS） | ✅ 见下方"统一版本说明" |
 | 6 | 硬件联调与实验 E1–E10 | ⏳ 待硬件 |
+| 7 | 复跑验证与技术文件校验（2026-11-01） | ✅ A0–A4/param_design/DSP 测试与 git 基准逐位一致；见 docs/11 |
 
 ## 统一版本说明（2026-10-27 版本统一）
 
@@ -26,7 +27,7 @@
   （本机 verify_all 607/607 ALL PASS，run_l3('core') 与 git 基准逐位一致）；
 - `matlab/reference_PV_LC_2023a/` —— 对方控制源码存档（control/*.m + project_params.m + 结论报告）；
 - `docs/07–10` —— 合并版说明 / 对齐验证报告 / R2023a 复现指南 / 607 项 PASS 明细；
-- 复现入口：`python python/run_tasks.py`（合并管线）；
+- 复现入口：`python -u python/run_tasks.py`（合并管线）；
   `docs/08_对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）。
 
 **参考存档**（不再维护，仅供版本对照）：
@@ -39,26 +40,39 @@
 S1/S4/S5/S6 图与 sim_summary* 表（THD 23–30% 为伪影，非物理）已删除；
 未经核验的 R2023b 降级导出件已被 R2023a 原生重建取代，一并删除。
 
+## 复跑验证（2026-11-01，详见 docs/11）
+
+- **A0–A4 全部重生成，物理量与 git 基准逐位一致**（diff 仅 wall_s 计时列）；
+  `param_design.py` 与验收报告一致；DSP 单元测试 gcc 重编后 SUMMARY PASS (0 failed)。
+- **实施方案校验**：以《技术文件2.docx》逐项校验《实施方案.docx》，12 章全覆盖；
+  方案 19 项自设参数/公式独立复算 17 项精确吻合，10 kHz 分流衰减 3 点差 1.6 dB
+  （方案口径未计入 Lg，不影响量级结论）。
+- **参数体系提示**：实施方案（30 V/10 kHz/0.6 mH/66 µF）、实验协议（36 V/20 kHz/0.5 mH/20 µF）、
+  合并验证版（36 V/20 kHz/2 mH/12 µF）三套各自自洽但互不兼容；做仿真-实验对照前必须统一。
+- **运行注意**：A4 远起点（V0=62/90 V）单次约 7 min，全管线实际 25–30 min（README 早前写 12 min 偏低）；
+  建议 `python -u python\run_tasks.py` 运行或分段调用 `a0()…a4()`——被 shell 超时终止时
+  stdout 缓冲会丢失且 A4 可能不落盘。
+
 ## 快速开始
 
 ```powershell
 # 1. 参数设计（L/C/R_d/f0/纹波预估）
 python python\design\param_design.py
 
-# 2. 仿真任务 S1–S6（开关级 + 平均模型）→ 生成 15 个 CSV + 图 + 汇总表
-python python\sim\run_sim_tasks.py
+# 2. 合并仿真管线 A0–A4（约 25–30 min；A4 远起点单次约 7 min）
+#    建议 -u：被中断时 stdout 缓冲会丢失且 A4 可能不落盘
+python -u python\run_tasks.py
 
-# 3. 分析口径单元测试
-python python\tests\test_metrics.py
-
-# 4. DSP 算法单元测试
+# 3. DSP 算法单元测试
 cd dsp
 gcc -std=c99 -O2 -I include tests\test_control.c src\*.c -o tests\test_control.exe
 .\tests\test_control.exe
 
-# 5. MATLAB（R2026b，实测 CSV 处理）
+# 4. R2023a 开关层复现（命令见文档）
+# docs/08_对齐验证报告_R2023a.md 第 6 节
+
+# 5. MATLAB（实测 CSV 处理，实验阶段用）
 # >> cd matlab; T = process_scope_csv('..\data\experiments', 5e6)
-# >> build_simulink_model   % 模型框架，ee_lib 连线按注释完成
 ```
 
 ## 目录结构（2026-10-29 结构统一后）
@@ -82,6 +96,7 @@ pv_inverter_lc_study/
 ├── results/                      # figures/ + tables/（解析产物 + A0–A4 验证数据共存）
 ├── data/                         # experiments/（实验阶段）+ sim_results/（重生成用）
 ├── docs/                         # 01–06 计划/规程 + 07–10 合并版说明/对齐报告/复现指南/607 明细
+│                                 # + 11 技术文件校验与复跑验证报告（2026-11-01）
 ├── archive/                      # 参考存档（不再维护）
 │   ├── python_old_sim/           #   旧 Python 开关级（PWM 量化伪影版）
 │   ├── python_old_analysis/      #   旧口径实现与测试
@@ -97,9 +112,16 @@ pv_inverter_lc_study/
 - **开关纹波**：40 kHz（2f_sw）簇幅值（含 ±50 Hz 工频调幅边带）及占基波百分比
 - **对比公平性**：两种结构同 DSP 程序、同控制参数、同测量点位；仅 LC 明显谐振时允许调 R_d 或 Kp 并注明
 
-## 已验证的核心结论（仿真，详见 docs/05_acceptance_report.md）
+## 已验证的核心结论（仿真，详见 docs/05_acceptance_report.md 与 docs/07_合并版说明.md）
 
-1. LC 对 40 kHz 开关纹波抑制显著：−28.6 dB（0.069 A vs 1.81 A 峰峰值）
-2. LC 的 THD 未必更低（低次谐波经谐振反而略高 2–3 个百分点）——两类指标必须分开报告
-3. 电流环相位裕度 46.9° ≥ 30°，闭环稳定（含 1.5 拍延时）
-4. MPPT 跟踪效率 99.9%（P&O 0.5 V/100 ms）
+合并版（平均模型 + 3.2 V 死区误差注入，2026-11-01 复跑确认与基准逐位一致）：
+
+1. LC 对 15–25 kHz 开关纹波衰减比 41–104×（Lg=0.5/1/2 mH），结论①成立且强依赖 Lg
+   （A0 解析层，数值-解析最大误差 0.30%）
+2. LC 的 THD 未必更低——两类指标必须分开报告；死区补偿是 THD 的主导项
+   （A2：L 200 W 无补偿 3.14% → sign 0.59%）
+3. 20 mA 传感器零偏 1:1 传递到 Idc（sat 档 −19 mA），硬件必须上电校准（A2 敏感性）
+4. LC 振铃 1.77 kHz 与解析 1779 Hz 一致；5 ms 残差 L 1.4% / LC 2.5%（A3）
+5. MPPT 稳态效率 99.99–100%，远起点 62 V 收敛 8.91 s，符合 P&O 步长物理（A4）
+6. 旧 S4 口径（20 kHz 纹波簇 −28.6 dB、相位裕度 46.9°）由 R2023a 开关层与 S3 解析承担，
+   见 docs/05、docs/08
