@@ -2,7 +2,7 @@
 """合并版重跑任务：A0 解析 / A1 L 扫描 / A2 核心对比 / A3 峰值阶跃 / A4 MPPT
 
 输出：results/tables/*.csv + results/figures/*.png
-运行：python merged/run_tasks.py   （在仓库根目录执行）
+运行：python -u python/run_tasks.py   （在仓库根目录执行；交叉验证口径，A0–A4）
 """
 import csv
 import math

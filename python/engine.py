@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """合并版仿真引擎 —— 对方算法的忠实 Python 移植（平均模型 + 功率级死区误差注入）
 
-移植清单（出处 = merged/reference/control/*.m）：
+移植清单（出处 = matlab/reference_PV_LC_2023a/control/*.m）：
   pr_design/pr_step      准 PR 预畸变 Tustin biquad + 饱和条件冻结
   pll_step               T/4 延时单相 PLL（100 拍循环队列）
   current_ctrl_step      电流环（LC 电容电流前馈 + 电网电压前馈 + 调制限幅）

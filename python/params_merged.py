@@ -90,3 +90,38 @@ def derived(p=P):
 
 
 D = derived()
+
+
+# ---------------------------------------------------------------- 口径切换
+# 两套口径并存（详见 docs/12_参数口径与单一真源.md）：
+#   reference（默认）= 交叉验证口径：对方 Desktop/仿真/PV_LC_project 的设计值，
+#                      A0-A4 既有基准，任何改动都会破坏与之逐位对齐的资格；
+#   canonical       = 工程口径：params/params.json（《实现方案》），硬件/DSP/实验/报告用。
+# use() 就地改写 P 与 D 的内容（对象身份不变），engine.py / run_tasks.py 里的
+# `from params_merged import P, D` 因此仍然指向同一对象，无需改调用点。
+import copy as _copy
+
+_P_REFERENCE = _copy.deepcopy(P)
+_PROFILE_NAMES = {
+    "reference": "交叉验证口径（对方设计值，A0-A4 基准）",
+    "canonical": "工程口径（《实现方案》/params/params.json）",
+}
+
+
+def use(profile="reference"):
+    """切换参数口径；返回实际生效的口径名。"""
+    global D
+    if profile == "reference":
+        newp = _copy.deepcopy(_P_REFERENCE)
+    elif profile == "canonical":
+        import params_canonical
+        newp = _copy.deepcopy(params_canonical.P)
+    else:
+        raise ValueError("未知口径: %s" % profile)
+    newp["profile"] = profile
+    newp["profile_name"] = _PROFILE_NAMES[profile]
+    P.clear()
+    P.update(newp)
+    D.clear()
+    D.update(derived(P))
+    return profile

@@ -20,7 +20,7 @@ __pycache__/
 *.pyc
 .venv/
 
-# 可一键重生成的仿真原始数据（运行 python/sim/run_sim_tasks.py 生成）
+# 可一键重生成的仿真原始数据（运行 python/run_tasks.py 生成）
 data/sim_results/*.csv
 # 同上，Simulink 侧（运行 matlab/run_sim_tasks_matlab.m 生成，单个 15MB+）
 data/sim_results_matlab/*.csv
@@ -29,6 +29,7 @@ data/sim_results_matlab/*.csv
 data/experiments/*.csv
 
 # 临时文件
+.work/
 _tmp*
 matlab_check.txt
 *_check.txt

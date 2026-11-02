@@ -1,7 +1,7 @@
 # 基于 DSP 的光伏并网逆变器 L 与 LC 耦合结构研究 —— 工程底座
 
 大创项目「基于DSP的光伏并网逆变器L与LC耦合结构对并网性能影响研究」的软件先行工程。
-依据《技术需求文档》与《实现方案》《实施方案》搭建，参数统一取自 [params/params.json](params/params.json)。
+依据《技术需求文档》与《实现方案》《实施方案》搭建，**唯一工程口径 = [params/params.json](params/params.json)**（200 W、36 Vrms、f_sw 20 kHz、L 0.5 mH、C 20 µF、R_d 0/1/2.2 Ω、L_g 0.5 mH、C_dc 4.5 mF、死区 400 ns）：DSP、实验与报告均以此为准。《实施方案》的 30 V/10 kHz 体系存档为**备选口径**，仿真侧的对方设计值（Vdc 80 V/2 mH/12 µF/1 µs）为**交叉验证口径**；三层口径的差异与本机校验见 [docs/12_参数口径与单一真源.md](docs/12_参数口径与单一真源.md) 与 `python python/check_params.py`。
 
 ## 当前状态（无硬件阶段已完成）
 
@@ -9,12 +9,16 @@
 |---|---|---|
 | 0 | 环境（Python 3.13 + scipy/matplotlib；**MATLAB R2023a Update 8（学校同款，D:\MATLAB）** + Simulink + Simscape Electrical + Control/Signal Toolbox；Git；gcc） | ✅ |
 | 1 | 参数设计 S1–S3（L 扫描、LC 谐振、稳定性判据，解析计算） | ✅ |
-| 2 | 仿真 S4–S6（旧 Python 开关级） | ⚠️ **已被 merged/ 取代**：开关级 PWM 脉宽量化伪影导致 THD 虚高（详见 merged/README），时域结论以 merged/ A2–A4 为准；解析结论 S2/S3 仍有效 |
+| 2 | 仿真 S4–S6（旧 Python 开关级） | ⚠️ **已被根目录 `python/` 管线取代**：开关级 PWM 脉宽量化伪影导致 THD 虚高（机理见 docs/07），时域结论以 A2–A4 为准；解析结论 S2/S3 仍有效 |
 | 3 | 数据分析工具链（THD/纹波/40kHz 统一口径，Python + MATLAB 双实现） | ✅ |
 | 4 | DSP 算法层 C 代码 + PC 单元测试（gcc 编译全过） | ✅ |
-| 5 | **统一验证版**：merged/（平均模型 A0–A4）+ R2023a 开关模型（607 项 ALL PASS） | ✅ 见下方"统一版本说明" |
+| 5 | **统一验证版**：根目录 `python/`（平均模型 A0–A4）+ R2023a 开关模型（607 项 ALL PASS） | ✅ 见下方"统一版本说明" |
 | 6 | 硬件联调与实验 E1–E10 | ⏳ 待硬件 |
 | 7 | 复跑验证与技术文件校验（2026-11-01） | ✅ A0–A4/param_design/DSP 测试与 git 基准逐位一致；见 docs/11 |
+| 8 | **工程口径核心对比 A5**（2026-11-02，`python -u python/run_canonical.py`，22 例/842 s） | ✅ L 三功率点稳定；**LC 在 R_d=0 时三功率点全部发散，R_d ≥ 1 Ω 即稳定**（见下方"工程口径结论"） |
+| 9 | 参数口径统一与机器校验（2026-11-02，P0） | ✅ 唯一工程口径 = `params/params.json`；`python python/check_params.py` **PASS 98 / FAIL 0**；见 docs/12 |
+| 10 | 原理图与 BOM（2026-11-02，P2） | ✅ docs/14 + `docs/schematic_system.svg`（版式验收 PASS）+ `results/tables/BOM_canonical.csv`；EDA 原理图待硬件前补 |
+| 11 | 结题报告初稿（2026-11-02，P2） | ✅ docs/15（10 章；硬件项标 ⏳ 待硬件） |
 
 ## 统一版本说明（2026-10-27 版本统一）
 
@@ -27,12 +31,13 @@
   （本机 verify_all 607/607 ALL PASS，run_l3('core') 与 git 基准逐位一致）；
 - `matlab/reference_PV_LC_2023a/` —— 对方控制源码存档（control/*.m + project_params.m + 结论报告）；
 - `docs/07–10` —— 合并版说明 / 对齐验证报告 / R2023a 复现指南 / 607 项 PASS 明细；
-- 复现入口：`python -u python/run_tasks.py`（合并管线）；
-  `docs/08_对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）。
+- 复现入口：`python -u python/run_tasks.py`（合并管线，交叉验证口径）；
+  `docs/08_对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）；
+- A5 工程口径核心对比：`python -u python/run_canonical.py`；参数口径机器交叉校验：`python python/check_params.py`（PASS 98 / FAIL 0）；
 
 **参考存档**（不再维护，仅供版本对照）：
 
-- `matlab/archive_R2026b_pv_inverter_L_LC.slx` —— 我方 R2026b 框架模型（R2023a 打不开）；
+- `archive/R2026b_pv_inverter_L_LC.slx` —— 我方 R2026b 框架模型（R2023a 打不开）；
 - 对方仓库 `models_R2024b_backup/` —— R2024b 原始模型（R2023a 打不开，重建成 R2023a 后保留）。
 
 **已归档/清除**：旧 Python 开关级管线（`archive/python_old_sim/`，含 PWM 量化伪影）、
@@ -47,8 +52,9 @@ S1/S4/S5/S6 图与 sim_summary* 表（THD 23–30% 为伪影，非物理）已�
 - **实施方案校验**：以《技术文件2.docx》逐项校验《实施方案.docx》，12 章全覆盖；
   方案 19 项自设参数/公式独立复算 17 项精确吻合，10 kHz 分流衰减 3 点差 1.6 dB
   （方案口径未计入 Lg，不影响量级结论）。
-- **参数体系提示**：实施方案（30 V/10 kHz/0.6 mH/66 µF）、实验协议（36 V/20 kHz/0.5 mH/20 µF）、
-  合并验证版（36 V/20 kHz/2 mH/12 µF）三套各自自洽但互不兼容；做仿真-实验对照前必须统一。
+- **参数体系已统一（2026-11-02）**：唯一工程口径 = `params/params.json`（《实现方案》体系：36 V/20 kHz/0.5 mH/20 µF/4.5 mF/400 ns），
+  《实施方案》（30 V/10 kHz/0.6 mH/66 µF）降级为**备选口径**（存档），合并验证版的对方设计值（Vdc 80 V/2 mH/12 µF/1 µs）为**交叉验证口径**：
+  差异项已登记并由 `python python/check_params.py` 机器校验（PASS 98 / FAIL 0），依据与换算见 docs/12。
 - **运行注意**：A4 远起点（V0=62/90 V）单次约 7 min，全管线实际 25–30 min（README 早前写 12 min 偏低）；
   建议 `python -u python\run_tasks.py` 运行或分段调用 `a0()…a4()`——被 shell 超时终止时
   stdout 缓冲会丢失且 A4 可能不落盘。
@@ -73,15 +79,28 @@ gcc -std=c99 -O2 -I include tests\test_control.c src\*.c -o tests\test_control.e
 
 # 5. MATLAB（实测 CSV 处理，实验阶段用）
 # >> cd matlab; T = process_scope_csv('..\data\experiments', 5e6)
+
+# 6. A5 工程口径核心对比（工程口径；22 例约 14 min）
+python -u python\run_canonical.py
+
+# 7. 参数口径机器交叉校验（真源 = params/params.json，期望 PASS 98 / FAIL 0）
+cd python && python check_params.py
+
+# 8. 原理图/BOM 重生成与版式验收（P2）
+python tools\make_schematic.py
+python tools\check_svg_layout.py
 ```
 
 ## 目录结构（2026-10-29 结构统一后）
 
 ```
 pv_inverter_lc_study/
-├── params/params.json            # 《实现方案》参数（param_design.py 设计探索用；验证版参数在 python/params_merged.py）
+├── params/params.json            # ★ 唯一工程口径（DSP/实验/报告以此为准；A5 对比直接读它）
 ├── python/                       # ★ 正式仿真管线（2023a 验证版，纯 Python）
-│   ├── params_merged.py          #   统一参数源（对方验证设计值，逐项标注出处）
+│   ├── params_canonical.py       #   工程口径参数源（从 params.json 换算，A5 用）
+│   ├── params_merged.py          #   交叉验证口径（对方设计值，逐项标注出处；use("canonical") 可切口径）
+│   ├── run_canonical.py          #   A5 工程口径核心对比（与 A2 同矩阵）
+│   ├── check_params.py           #   参数口径机器交叉校验（json ↔ param.h ↔ 参数源 ↔ docs）
 │   ├── engine.py                 #   对方控制算法逐行移植 + 平均功率级 + 死区误差注入
 │   ├── metrics.py / analytic.py  #   THD(2-50)/TDD 口径 + LCL 谐振/衰减解析
 │   ├── run_tasks.py              #   A0–A4 一键重生成 results/
@@ -93,16 +112,22 @@ pv_inverter_lc_study/
 │   ├── process_scope_csv.m       #   实测 CSV 批处理（实验阶段用）
 │   └── build_simulink_model.m    #   我方框架模型生成脚本
 ├── dsp/                          # C2000 算法层 C 代码（gcc/TI 编译通过）
-├── results/                      # figures/ + tables/（解析产物 + A0–A4 验证数据共存）
+├── results/                      # figures/ + tables/（解析产物 + A0–A5 验证数据共存）
 ├── data/                         # experiments/（实验阶段）+ sim_results/（重生成用）
 ├── docs/                         # 01–06 计划/规程 + 07–10 合并版说明/对齐报告/复现指南/607 明细
 │                                 # + 11 技术文件校验与复跑验证报告（2026-11-01）
+│                                 # + 12 参数口径与单一真源 + 13 S/E/A 编号映射
+│                                 # + 14 原理图与 BOM + 15 结题报告初稿
+├── tools/                        # P2 原理图/BOM 生成与版式验收脚本
+│   ├── make_schematic.py         #   生成 docs/schematic_system.svg + results/tables/BOM_canonical.csv
+│   └── check_svg_layout.py       #   SVG 版式独立验收（文字越界 / 色块重叠）
 ├── archive/                      # 参考存档（不再维护）
 │   ├── python_old_sim/           #   旧 Python 开关级（PWM 量化伪影版）
 │   ├── python_old_analysis/      #   旧口径实现与测试
 │   ├── python_old_tests/
 │   └── R2026b_pv_inverter_L_LC.slx
-└── 对方仓库（Desktop\大创\仿真\仿真）  # PV_LC_project：models/=R2023a 重建版，models_R2024b_backup/=R2024b 存档
+└── 对方仓库（仓库外，本机 C:\Users\35015\Desktop\大创\仿真\仿真 = PV_LC_project，375 MB，R2024b 原始仓库）
+    关键基线已存档进 matlab/reference_PV_LC_2023a/（对方控制源码 + 结论报告）与 matlab/PV_LC_models_R2023a/
 ```
 
 ## 统一口径（与报告 6.3/7.4 严格一致）
@@ -114,7 +139,7 @@ pv_inverter_lc_study/
 
 ## 已验证的核心结论（仿真，详见 docs/05_acceptance_report.md 与 docs/07_合并版说明.md）
 
-合并版（平均模型 + 3.2 V 死区误差注入，2026-11-01 复跑确认与基准逐位一致）：
+**交叉验证口径**（合并版平均模型 + 3.2 V 死区误差注入，对方设计参数 Vdc 80 V/2 mH/12 µF/1 µs；2026-11-01 复跑确认与基准逐位一致）：
 
 1. LC 对 15–25 kHz 开关纹波衰减比 41–104×（Lg=0.5/1/2 mH），结论①成立且强依赖 Lg
    （A0 解析层，数值-解析最大误差 0.30%）
@@ -125,3 +150,18 @@ pv_inverter_lc_study/
 5. MPPT 稳态效率 99.99–100%，远起点 62 V 收敛 8.91 s，符合 P&O 步长物理（A4）
 6. 旧 S4 口径（20 kHz 纹波簇 −28.6 dB、相位裕度 46.9°）由 R2023a 开关层与 S3 解析承担，
    见 docs/05、docs/08
+
+**工程口径**（`params/params.json`：200 W、36 Vrms、20 kHz、L 0.5 mH、C 20 µF、L_g 0.5 mH、C_dc 4.5 mF、死区 400 ns；A5，2026-11-02，22 例共 842 s）：
+
+1. **L 结构三个功率点（70/130/180 W）全部稳定**；死区补偿是 THD 主导项
+   （70 W：无补偿 4.843 % → sign 0.430 %），与交叉验证口径结论 2 同向
+2. **LC 在 R_d = 0 时三个功率点全部发散**（THD 95–379 %、高频占比 372–722 %、幅值偏差最大 −68.8 %）；
+   json/`param_design.py` 的「f_res 2252 Hz < f_s/6 3333 Hz ⇒ 自然阻尼、R_d 可先 0 Ω」判据在本参数组合下**不成立**
+   （该判据只解析被动的 LCL 网络，未计入闭环增益与延时）
+3. **加 R_d 即稳定**：1.0 Ω 与 2.2 Ω 在 130/180 W 均稳定（THD 0.58–0.80 %、高频 0.20–0.32 %、Idc 微安级）；
+   2.2 Ω 的高频更低，THD 与 1.0 Ω 基本持平
+4. **工程动作**：LC 模块**必装 R_d，仿真起点 1.0 Ω**（与《实现方案》4.2 第二档一致），最终值由 E7 实验确定（BOM 第 9 项已改"必装"）
+5. 解析层：f₀ = 1591.55 Hz、f_res 解析 2250.79 Hz（数值 2252.25 Hz，err 0.065 %）、
+   40 kHz 衰减比 R_d=0 **314.8×** / 1.0 Ω 61.4× / 2.2 Ω 28.4×、15–25 kHz 均值 79.8×、额定最小母线电压 53.38 V（压降 4.85 %）
+6. 口径对照：A2（交叉验证口径，R_d = 1 Ω）LC THD ≈ 0.71–0.89 % ↔ A5（工程口径，R_d = 1 Ω）≈ 0.80 %，
+   量级与方向一致；A5 用 `fixed_i` 静态对比（不含 PV/MPPT），引用数字必须写清口径。见 docs/12 §6 与 docs/15

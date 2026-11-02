@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="900" viewBox="0 0 1240 900">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<rect x="0" y="0" width="1240" height="900" fill="#ffffff"/>
+<text x="24" y="32" font-family="Microsoft YaHei,Segoe UI" font-size="19" font-weight="700" fill="#222" text-anchor="start">光伏并网逆变器 L / LC 耦合结构对比 —— 系统级原理框图（工程口径）</text>
+<text x="24" y="53" font-family="Microsoft YaHei,Segoe UI" font-size="11" font-weight="400" fill="#555" text-anchor="start">口径：params/params.json（200 W · 36 Vrms/50 Hz · f_sw 20 kHz · L 0.5 mH · C 20 µF · R_d 0/1/2.2 Ω · L_g 0.5 mH · C_dc 4.5 mF · 死区 400 ns）</text>
+<line x1="20" y1="66" x2="1220" y2="66" stroke="#ddd" stroke-width="2"/>
+<text x="24" y="92" font-family="Microsoft YaHei,Segoe UI" font-size="13" font-weight="700" fill="#c0392b" text-anchor="start">① 主功率通路（低压隔离，禁止直接接 220 V 市电）</text>
+<rect x="30" y="110" width="158" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+<text x="109" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">光伏模拟电源</text>
+<text x="109" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">Voc 90 V / Vmpp 75 V</text>
+<text x="109" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">Isc 2.9 A / Impp 2.7 A</text>
+<text x="109" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">200 W；按辐照 35/65/90 %</text>
+<rect x="224" y="110" width="140" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+<text x="294" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">预充 + 直流接触器</text>
+<text x="294" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">10 Ω / 10 W 预充电阻</text>
+<text x="294" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">90 % 后短接预充电阻</text>
+<text x="294" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">启动限流 ≤3 A</text>
+<rect x="400" y="110" width="150" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+<text x="475" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">C_dc 4.5 mF</text>
+<text x="475" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">2×2200 µF/100 V 电解</text>
+<text x="475" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">22 µF/100 V 薄膜去耦</text>
+<text x="475" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">母线纹波 &lt;2 %</text>
+<rect x="586" y="110" width="168" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+<text x="670" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">H 桥（单极性倍频）</text>
+<text x="670" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">4× MOSFET 100 V/40 A</text>
+<text x="670" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">R_ds(on) ≤ 25 mΩ</text>
+<text x="670" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">f_sw 20 kHz，死区 400 ns</text>
+<rect x="790" y="110" width="168" height="96" rx="8" fill="#fef5e7" stroke="#b9770e" stroke-width="2"/>
+<text x="874" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7e5109" text-anchor="middle">L / LC 耦合模块</text>
+<text x="874" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">L：0.5 mH / 10 A</text>
+<text x="874" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">LC：并 20 µF + R_d 插座</text>
+<text x="874" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">跳线切换，共用同一 L</text>
+<rect x="994" y="110" width="216" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+<text x="1102" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">隔离变压器 + PCC</text>
+<text x="1102" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">副边漏感 L_g ≈ 0.5 mH</text>
+<text x="1102" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">空气开关/保险丝 10 A</text>
+<text x="1102" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">交流接触器 25 A/250 V（DSP 控制）</text>
+<line x1="188" y1="158" x2="222" y2="158" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="364" y1="158" x2="398" y2="158" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="550" y1="158" x2="584" y2="158" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<text x="567" y="152" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#555" text-anchor="middle">直流母线 75 V</text>
+<line x1="754" y1="158" x2="788" y2="158" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<text x="771" y="152" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#555" text-anchor="middle">u_ab</text>
+<line x1="958" y1="158" x2="992" y2="158" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<text x="975" y="152" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#555" text-anchor="middle">i_g</text>
+<text x="24" y="250" font-family="Microsoft YaHei,Segoe UI" font-size="13" font-weight="700" fill="#2471a3" text-anchor="start">② 驱动与辅助电源（隔离栅驱）</text>
+<rect x="400" y="266" width="190" height="86" rx="8" fill="#eaf2fb" stroke="#2471a3" stroke-width="2"/>
+<text x="495" y="287" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#154360" text-anchor="middle">隔离栅极驱动 ×2</text>
+<text x="495" y="305" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">UCC21520（或 IR2110 + 自举）</text>
+<text x="495" y="320" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">自举二极管/电容、栅极电阻 10 Ω</text>
+<text x="495" y="335" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">驱动侧 +12 V，与 DSP 侧隔离</text>
+<rect x="614" y="266" width="190" height="86" rx="8" fill="#eaf2fb" stroke="#2471a3" stroke-width="2"/>
+<text x="709" y="287" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#154360" text-anchor="middle">辅助电源</text>
+<text x="709" y="305" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">+12 V（驱动/继电器）</text>
+<text x="709" y="320" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">+5 V、+3.3 V（ADC 参考 3.0 V）</text>
+<text x="709" y="335" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">AMC1311/AMC1301 隔离侧电源</text>
+<rect x="30" y="266" width="340" height="86" rx="8" fill="#eaf2fb" stroke="#2471a3" stroke-width="2"/>
+<text x="200" y="287" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#154360" text-anchor="middle">功率级开关（H 桥四管）</text>
+<text x="200" y="305" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">高/低边互补 + 死区 400 ns（ePWM 硬件死区）</text>
+<text x="200" y="320" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">栅极回路 10 Ω + 下拉，负压无关断</text>
+<text x="200" y="335" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">导热绝缘 + 母线吸收电容</text>
+<line x1="400" y1="309" x2="372" y2="309" stroke="#2471a3" stroke-width="2" marker-end="url(#ah)"/>
+<text x="386" y="302" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#2471a3" text-anchor="middle">PWM 6 路</text>
+<line x1="670" y1="260" x2="668" y2="212" stroke="#2471a3" stroke-width="2" marker-end="url(#ah)"/>
+<text x="700" y="250" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#2471a3" text-anchor="middle">+12 V</text>
+<text x="24" y="392" font-family="Microsoft YaHei,Segoe UI" font-size="13" font-weight="700" fill="#1e8449" text-anchor="start">③ 采样调理（5 路 → ADC，上电零偏自动校准）</text>
+<rect x="30" y="408" width="210" height="96" rx="8" fill="#eafaf1" stroke="#1e8449" stroke-width="2"/>
+<text x="135" y="429" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#14532d" text-anchor="middle">U_PV 直流电压</text>
+<text x="135" y="447" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">分压比 100 : 3（100 V → 3.0 V）</text>
+<text x="135" y="462" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">RC 抗混叠 100 Ω + 1–2.2 nF</text>
+<text x="135" y="477" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">BAT54S 钳位 3.3 V，无偏置</text>
+<rect x="258" y="408" width="210" height="96" rx="8" fill="#eafaf1" stroke="#1e8449" stroke-width="2"/>
+<text x="363" y="429" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#14532d" text-anchor="middle">u_g 交流电压</text>
+<text x="363" y="447" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">分压比 60 : 1.5，中点偏置 1.5 V</text>
+<text x="363" y="462" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">RC 抗混叠 + 钳位</text>
+<text x="363" y="477" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">36 Vrms → 幅值 1.27 V</text>
+<rect x="486" y="408" width="246" height="96" rx="8" fill="#eafaf1" stroke="#1e8449" stroke-width="2"/>
+<text x="609" y="429" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#14532d" text-anchor="middle">I_PV / i_g / i_L 电流</text>
+<text x="609" y="447" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">5 mΩ 四线分流 + INA240A1（×20）</text>
+<text x="609" y="462" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">链路增益 0.1 V/A（=10 A/V），零点 1.5 V</text>
+<text x="609" y="477" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">±1.5 V → ±15 A，覆盖 10/12 A 保护点</text>
+<rect x="750" y="408" width="246" height="96" rx="8" fill="#eafaf1" stroke="#1e8449" stroke-width="2"/>
+<text x="873" y="429" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#14532d" text-anchor="middle">抗混叠 + 保护通道</text>
+<text x="873" y="447" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">每路 RC 100 Ω/1–2.2 nF 二阶</text>
+<text x="873" y="462" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">TLV3201 比较器：硬件过流阈值 12 A</text>
+<text x="873" y="477" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">输出 → ePWM TripZone（硬件封锁）</text>
+<line x1="240" y1="456" x2="258" y2="456" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="468" y1="456" x2="486" y2="456" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="732" y1="456" x2="750" y2="456" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+<text x="24" y="542" font-family="Microsoft YaHei,Segoe UI" font-size="13" font-weight="700" fill="#7d3c98" text-anchor="start">④ 控制、保护与联锁（TI C2000 F28379D）</text>
+<rect x="30" y="558" width="246" height="112" rx="8" fill="#f4ecf7" stroke="#7d3c98" stroke-width="2"/>
+<text x="153" y="579" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#4a235a" text-anchor="middle">F28379D LaunchPad</text>
+<text x="153" y="597" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">ADC：5 路 + 零偏校准（1024 点平均）</text>
+<text x="153" y="612" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">ePWM：20 kHz 单极性倍频 + 硬件死区</text>
+<text x="153" y="627" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">TZ 硬件封锁；GPIO：接触器/继电器/急停</text>
+<rect x="300" y="558" width="232" height="112" rx="8" fill="#fdf2e9" stroke="#ca6f1e" stroke-width="2"/>
+<text x="416" y="579" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7e5109" text-anchor="middle">软件保护（param.h 阈值）</text>
+<text x="416" y="597" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">OC_SOFT 10 A / OC_HARD 12 A</text>
+<text x="416" y="612" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">V_dc 过压 95 V / 欠压 58 V</text>
+<text x="416" y="627" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">U_g 30–42 V、f_g 49–51 Hz、PLL 解锁</text>
+<rect x="558" y="558" width="232" height="112" rx="8" fill="#fdf2e9" stroke="#ca6f1e" stroke-width="2"/>
+<text x="674" y="579" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7e5109" text-anchor="middle">继电器/接触器驱动</text>
+<text x="674" y="597" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">GPIO 直驱不足 → ULN2003 或 2N7002</text>
+<text x="674" y="612" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">线圈 12 V + 1N4148 续流</text>
+<text x="674" y="627" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">预充/接触器/急停三路联锁</text>
+<rect x="816" y="558" width="180" height="112" rx="8" fill="#fdf2e9" stroke="#ca6f1e" stroke-width="2"/>
+<text x="906" y="579" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7e5109" text-anchor="middle">急停 + 人工联锁</text>
+<text x="906" y="597" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">常闭急停按钮直接断驱动</text>
+<text x="906" y="612" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">断电后待母线 &lt;10 V</text>
+<text x="906" y="627" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">更换模块必须放电</text>
+<line x1="276" y1="614" x2="300" y2="614" stroke="#7d3c98" stroke-width="2" marker-end="url(#ah)"/>
+<text x="288" y="606" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#7d3c98" text-anchor="middle">采样/保护位</text>
+<line x1="532" y1="614" x2="558" y2="614" stroke="#7d3c98" stroke-width="2" marker-end="url(#ah)"/>
+<text x="545" y="606" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#7d3c98" text-anchor="middle">控制</text>
+<line x1="168" y1="552" x2="168" y2="510" stroke="#1e8449" stroke-width="2" marker-end="url(#ah)" stroke-dasharray="5,4"/>
+<text x="190" y="544" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#1e8449" text-anchor="middle">ADC</text>
+<line x1="276" y1="356" x2="300" y2="578" stroke="#2471a3" stroke-width="2" marker-end="url(#ah)" stroke-dasharray="5,4"/>
+<text x="352" y="366" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#2471a3" text-anchor="middle">PWM/TZ</text>
+<rect x="30" y="700" width="1180" height="176" rx="8" fill="#fbfbfb" stroke="#ddd"/>
+<text x="48" y="726" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#222" text-anchor="start">图例与安全红线</text>
+<rect x="48" y="742" width="22" height="14" rx="3" fill="#fdecea" stroke="#c0392b"/>
+<text x="76" y="754" font-family="Microsoft YaHei,Segoe UI" font-size="11" font-weight="400" fill="#222" text-anchor="start">主功率</text>
+<rect x="180" y="742" width="22" height="14" rx="3" fill="#fef5e7" stroke="#b9770e"/>
+<text x="208" y="754" font-family="Microsoft YaHei,Segoe UI" font-size="11" font-weight="400" fill="#222" text-anchor="start">耦合模块</text>
+<rect x="312" y="742" width="22" height="14" rx="3" fill="#eaf2fb" stroke="#2471a3"/>
+<text x="340" y="754" font-family="Microsoft YaHei,Segoe UI" font-size="11" font-weight="400" fill="#222" text-anchor="start">驱动/电源</text>
+<rect x="444" y="742" width="22" height="14" rx="3" fill="#eafaf1" stroke="#1e8449"/>
+<text x="472" y="754" font-family="Microsoft YaHei,Segoe UI" font-size="11" font-weight="400" fill="#222" text-anchor="start">采样调理</text>
+<rect x="576" y="742" width="22" height="14" rx="3" fill="#f4ecf7" stroke="#7d3c98"/>
+<text x="604" y="754" font-family="Microsoft YaHei,Segoe UI" font-size="11" font-weight="400" fill="#222" text-anchor="start">控制</text>
+<rect x="708" y="742" width="22" height="14" rx="3" fill="#fdf2e9" stroke="#ca6f1e"/>
+<text x="736" y="754" font-family="Microsoft YaHei,Segoe UI" font-size="11" font-weight="400" fill="#222" text-anchor="start">保护/联锁</text>
+<text x="48" y="790" font-family="Microsoft YaHei,Segoe UI" font-size="12" font-weight="700" fill="#c0392b" text-anchor="start">1) 全程低压小功率：直流侧 ≤100 V 用光伏模拟电源，交流侧经隔离变压器/电网模拟端；未经指导教师确认严禁直接接入 220 V 市电并网。</text>
+<text x="48" y="812" font-family="Microsoft YaHei,Segoe UI" font-size="12" font-weight="700" fill="#c0392b" text-anchor="start">2) 上电顺序：辅助电源 → DSP 确认 PWM 封锁 → 直流源（限流 ≤3 A，经预充）→ 交流侧；硬件过流（12 A）经 TZ 硬件封锁，不依赖软件响应。</text>
+<text x="48" y="834" font-family="Microsoft YaHei,Segoe UI" font-size="12" font-weight="700" fill="#c0392b" text-anchor="start">3) 首次上电：限流 → 空载 → 阻性负载 → 交流侧耦合；换模块必须断电并确认母线放电；硬件调试至少两人在场，接线经指导教师/实验室人员确认。</text>
+<text x="48" y="858" font-family="Microsoft YaHei,Segoe UI" font-size="12" font-weight="700" fill="#7e5109" text-anchor="start">4) 两结构公平性：共用同一只 0.5 mH 电感、同一 DSP 程序与控制参数、同一测量点位；仅当 LC 明显谐振时允许加 R_d 或微调 Kp，并在报告中注明。</text>
+</svg>
