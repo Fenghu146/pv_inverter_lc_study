@@ -41,6 +41,16 @@ import metrics                           # noqa: E402
 
 TAB = os.path.join(_ROOT, "results", "tables")
 FIG = os.path.join(_ROOT, "results", "figures")
+# LC_TAG：给产物加后缀（如 LC_TAG=lg0550 → A5_core_lg0550.csv），
+# 用于 L_g 实测回填等"重跑但保留基准"的场景，默认不加后缀。
+TAG = os.environ.get("LC_TAG", "").strip()
+
+
+def _n(name):
+    if not TAG:
+        return name
+    base, ext = os.path.splitext(name)
+    return "%s_%s%s" % (base, TAG, ext)
 os.makedirs(TAB, exist_ok=True)
 os.makedirs(FIG, exist_ok=True)
 
@@ -49,7 +59,7 @@ PW = tuple(P["P_points"])      # 工程口径三功率点：70/130/180 W（35/65
 
 
 def save_csv(name, rows):
-    path = os.path.join(TAB, name)
+    path = os.path.join(TAB, _n(name))
     with open(path, "w", encoding="utf-8-sig", newline="") as f:
         f.write(",".join(rows[0].keys()) + "\n")
         for r in rows:
@@ -178,7 +188,7 @@ def a5_fig(core_rows):
     axes[0].legend(fontsize=8)
     fig.suptitle("A5 工程口径死区补偿对比（Vdc 75 V / L 0.5 mH / C 20 µF / 死区 1.2 V）")
     fig.tight_layout()
-    fig.savefig(os.path.join(FIG, "A5_thd_comp.png"), dpi=150)
+    fig.savefig(os.path.join(FIG, _n("A5_thd_comp.png")), dpi=150)
     plt.close(fig)
 
 

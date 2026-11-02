@@ -8,12 +8,12 @@
 <rect x="30" y="110" width="158" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
 <text x="109" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">光伏模拟电源</text>
 <text x="109" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">Voc 90 V / Vmpp 75 V</text>
-<text x="109" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">Isc 2.9 A / Impp 2.7 A</text>
+<text x="109" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">Isc 2.9 A / Impp 2.67 A</text>
 <text x="109" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">200 W；按辐照 35/65/90 %</text>
 <rect x="224" y="110" width="140" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
 <text x="294" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">预充 + 直流接触器</text>
-<text x="294" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">10 Ω / 10 W 预充电阻</text>
-<text x="294" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">90 % 后短接预充电阻</text>
+<text x="294" y="149" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">100 Ω / 25 W 预充电阻</text>
+<text x="294" y="164" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">τ = 0.45 s，90 % 短接</text>
 <text x="294" y="179" font-family="Microsoft YaHei,Segoe UI" font-size="11" fill="#333" text-anchor="middle">启动限流 ≤3 A</text>
 <rect x="400" y="110" width="150" height="96" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
 <text x="475" y="131" font-family="Microsoft YaHei,Segoe UI" font-size="14" font-weight="700" fill="#7b241c" text-anchor="middle">C_dc 4.5 mF</text>

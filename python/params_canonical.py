@@ -46,6 +46,25 @@ _L = float(PL["L_H"])
 # 单极性倍频 SPWM 下电感电流纹波峰值（Vdc/(8·L·f_sw)），死区补偿饱和点取其一半
 _DI_PP = _VDC/(8.0*_L*_FS)
 
+
+def _pv_block():
+    """PV 单二极管参数：json 有 pv_model（python/calib_pv.py --apply 写入）就用标定值，
+    否则退回对方未标定值并置 pv_uncalibrated=True（A5 静态对比不依赖它）。
+    fixed_i 静态对比不使用 PV 模型；MPPT 口径标定见 docs/12 §7。"""
+    m = J.get("pv_model")
+    if m:
+        return ({"Isc": float(m["Isc_A"]), "Voc": float(m["Voc_V"]),
+                 "Nser": float(m["Nser"]), "N": float(m["N"]),
+                 "Rs": float(m["Rs_ohm"]), "Rp": float(m["Rp_ohm"]),
+                 "Ki": float(m["Ki_per_K"]), "Tvco": float(m["Tvco_V_per_K"])}, False)
+    return ({"Isc": float(R["Isc_A"]), "Voc": float(R["Voc_V"]),
+             "Nser": 160.0, "N": 1.058, "Rs": 0.937, "Rp": 300.0,
+             "Ki": 1.3e-3, "Tvco": -0.13}, True)
+
+
+_PV_BLOCK, _PV_UNCAL = _pv_block()
+
+
 P = {
     "profile": "canonical",
     "profile_name": "工程口径（《实现方案》/params/params.json）",
@@ -100,11 +119,9 @@ P = {
     "mppt_Im_max": float(CO["I_amp_limit_A"][1]),
     "mppt_V0": float(CO["mppt_init_frac_Voc"])*float(R["Voc_V"]),
 
-    # ---- PV：fixed_i 静态对比不使用；MPPT 口径见 docs/12（待标定 75 V/2.67 A） ----
-    "pv": {"Isc": float(R["Isc_A"]), "Voc": float(R["Voc_V"]),
-           "Nser": 160.0, "N": 1.058, "Rs": 0.937, "Rp": 300.0,
-           "Ki": 1.3e-3, "Tvco": -0.13},
-    "pv_uncalibrated": True,
+    # ---- PV：fixed_i 静态对比不使用；MPPT 口径见 docs/12 ----
+    "pv": dict(_PV_BLOCK),
+    "pv_uncalibrated": _PV_UNCAL,
 
     # ---- 仿真数值 ----
     "nsub": 10,

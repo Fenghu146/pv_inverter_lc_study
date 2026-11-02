@@ -1,0 +1,13 @@
+section,quantity,target,model,deviation,tol,verdict
+target,Voc_V,90.000000,90.000000,0.000000,0.05,PASS
+target,Isc_A,2.900000,2.897262,-0.002738,0.005,PASS
+target,Vmpp_V,75.000000,74.999987,-0.000013,0.1,PASS
+target,Impp_A,2.670000,2.670095,0.000095,0.01,PASS
+target,P_mpp_W,200.250000,200.257139,0.007139,,INFO
+param,N_ideal,,1.030536,,,
+param,Rs_ohm,,0.937000,,,
+param,Rp_ohm,,991.676,,,
+identifiability,Rs=0.000 Ohm,1.3528,2167.8,75.0000,2.670,2.21e-31
+identifiability,Rs=0.200 Ohm,1.2801,1701.1,75.0000,2.670,6.91e-09
+identifiability,Rs=0.500 Ohm,1.1753,1303.2,75.0000,2.670,7.36e-08
+identifiability,Rs=0.937 Ohm,1.0305,991.7,75.0000,2.670,4.46e-07

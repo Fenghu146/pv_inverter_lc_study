@@ -194,8 +194,22 @@ want("params_canonical", "P_points ← power_points", [70.0, 130.0, 180.0], P["P
 want("params_canonical", "G_points ← irradiance×1000", [350.0, 650.0, 900.0], P["G_points"])
 want("params_canonical", "R_d_options", PL["R_d_options_ohm"], P["R_d_options"])
 want("params_canonical", "meas 口径", ME["thd_harmonic_range"], P["meas"]["thd_harmonic_range"])
-want("params_canonical", "PV 未标定标记", True, P.get("pv_uncalibrated", False),
-     "fixed_i 静态对比不使用 PV；MPPT 口径待标定（docs/12 记录）")
+_PVM = J.get("pv_model")
+if _PVM:
+    # PV 已标定（python/calib_pv.py --apply）：标记必须为 False，且四个目标点在 json 里自洽
+    want("params_canonical", "PV 已标定标记", False, P.get("pv_uncalibrated", True),
+         "json 有 pv_model 块 ⇒ 已标定（docs/12 §7 已闭环）")
+    want("params_canonical", "pv.N ← json pv_model", float(_PVM["N"]), P["pv"]["N"])
+    want("params_canonical", "pv.Rp ← json pv_model", float(_PVM["Rp_ohm"]), P["pv"]["Rp"])
+    want("params_canonical", "pv.Rs 不可辨识（固定物理值）", True, bool(_PVM.get("Rs_identifiable") is False),
+         "四目标点对 Rs 不敏感，固定 0.937 Ω，见 results/tables/pv_calibration.csv")
+    close("json 自洽", "pv_model Vmpp ← targets", float(_PVM["targets"]["Vmpp_V"]),
+          float(_PVM["achieved"]["Vmpp_V"]), abs_tol=0.1)
+    close("json 自洽", "pv_model Impp ← targets", float(_PVM["targets"]["Impp_A"]),
+          float(_PVM["achieved"]["Impp_A"]), abs_tol=0.01)
+else:
+    want("params_canonical", "PV 未标定标记", True, P.get("pv_uncalibrated", False),
+         "fixed_i 静态对比不使用 PV；MPPT 口径待标定（python/calib_pv.py --apply 后自动转为已标定）")
 
 # ================================================================ 4) params_merged 共享项
 import params_merged as PM   # noqa: E402
