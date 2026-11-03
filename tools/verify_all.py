@@ -11,6 +11,7 @@
   V4  系统框图版式              tools/check_svg_layout.py
   V5  参数设计复算              python/design/param_design.py（重算并覆写 results/tables/param_design.txt）
   V6  关键产物存在性            交付给结论的 CSV/PNG 是否齐全（不校验数值，只防丢文件）
+  V7  SITL 闭环冒烟             编出 sitl.dll 后跑 0.8 s，要求状态机走到 MPPT_RUN、出稳态指标且无故障
 
 用法：
   python tools/verify_all.py            # 全量（V1–V6）
@@ -41,6 +42,7 @@ ARTIFACTS = [
     "results/tables/BOM_canonical.csv",
     "results/tables/netlist_canonical.csv",
     "results/tables/pv_calibration.csv",
+    "results/tables/SITL_core.csv",
     "results/figures/A5_thd_comp.png",
     "results/figures/param_design.png",
     "docs/schematic_system.svg",
@@ -115,6 +117,25 @@ def v6_artifacts():
     return True, "%d 个产物齐全" % len(ARTIFACTS), time.time() - t0
 
 
+def v7_sitl():
+    t0 = time.time()
+    rc, out, dt = _run([PY, "tools/sitl_build.py"], ROOT)
+    if rc != 0:
+        return False, "编译 SITL 库失败：" + out.strip()[-400:], time.time() - t0
+    rc, out, dt2 = _run([PY, "python/sitl.py", "--struct", "L", "--mode", "avg",
+                         "--dur", "0.8"], ROOT)
+    if rc != 0:
+        return False, "SITL 运行失败：" + out.strip()[-400:], time.time() - t0
+    reached = "MPPT_RUN" in out
+    fault = "故障码" in out
+    if not reached:
+        return False, "状态机未走到 MPPT_RUN", time.time() - t0
+    if fault:
+        return False, "闭环中出现故障：" + [ln for ln in out.splitlines() if "故障码" in ln][-1], time.time() - t0
+    line = [ln for ln in out.splitlines() if "末窗" in ln or "末拍" in ln]
+    return True, (line[-1].strip() if line else "闭环正常"), time.time() - t0
+
+
 CHECKS = [
     ("V1", "DSP 算法单元测试", v1_dsp_tests, True),
     ("V2", "参数唯一真源一致性", v2_params, True),
@@ -122,6 +143,7 @@ CHECKS = [
     ("V4", "系统框图版式", v4_svg, True),
     ("V5", "参数设计复算", v5_design, True),
     ("V6", "关键产物存在性", v6_artifacts, True),
+    ("V7", "SITL 闭环冒烟", v7_sitl, True),
 ]
 
 
@@ -132,7 +154,7 @@ def main(argv):
             print("%s  %s%s" % (cid, name, "（--quick 跳过）" if quick and heavy else ""))
         return 0
 
-    skip = {"V1", "V5"} if quick else set()
+    skip = {"V1", "V5", "V7"} if quick else set()
     results = []
     print("一键验收  root=%s%s" % (ROOT, "  [--quick]" if quick else ""))
     print("-" * 78)

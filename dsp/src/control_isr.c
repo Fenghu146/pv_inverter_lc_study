@@ -80,6 +80,13 @@ void ctrl_isr(CtrlContext *c, const CtrlMeas *m, CtrlOut *o)
                        (c->fsm.state == ST_MPPT_RUN ||
                         c->fsm.state == ST_CONNECT ||
                         c->fsm.state == ST_FIXED_I);
+    /* 母线欠压：预充完成前母线本来可以从 0 V 起步（PV 经预充电阻充电），
+     * 这段由 PRECHARGE 的状态与超时看护，不能让 UV 先一步把状态机打死。
+     * 2026-11-03 SITL 发现：不屏蔽时上电第一拍就 FAULT(VDC_UV)。 */
+    pin.uv_mask = (c->fsm.state == ST_INIT ||
+                   c->fsm.state == ST_OFFSET_CAL ||
+                   c->fsm.state == ST_WAIT_GRID ||
+                   c->fsm.state == ST_PRECHARGE) ? 1 : 0;
     /* 电网范围在并网前也要看，但 PLL 未锁时频率会漂，WAIT_GRID 只用 rms */
     pin.grid_check_en = (c->fsm.state == ST_WAIT_GRID ||
                          c->fsm.state == ST_SYNC ||

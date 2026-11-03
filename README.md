@@ -16,7 +16,7 @@
 | 6 | 硬件联调与实验 E1–E10 | ⏳ 待硬件 |
 | 7 | 复跑验证与技术文件校验（2026-11-01） | ✅ A0–A4/param_design/DSP 测试与 git 基准逐位一致；见 docs/11 |
 | 8 | **工程口径核心对比 A5**（2026-11-02，`python -u python/run_canonical.py`，22 例/842 s） | ✅ L 三功率点稳定；**LC 在 R_d=0 时三功率点全部发散，R_d ≥ 1 Ω 即稳定**（见下方"工程口径结论"） |
-| 9 | 参数口径统一与机器校验（2026-11-02，P0） | ✅ 唯一工程口径 = `params/params.json`；`python python/check_params.py` **PASS 98 / FAIL 0**；见 docs/12 |
+| 9 | 参数口径统一与机器校验（2026-11-02，P0） | ✅ 唯一工程口径 = `params/params.json`；`python python/check_params.py` **PASS 103 / FAIL 0**；见 docs/12 |
 | 10 | 原理图与 BOM（2026-11-02，P2） | ✅ docs/14 + `docs/schematic_system.svg`（版式验收 PASS）+ `results/tables/BOM_canonical.csv`；EDA 原理图待硬件前补 |
 | 11 | 结题报告初稿（2026-11-02，P2） | ✅ docs/15（10 章；硬件项标 ⏳ 待硬件） |
 
@@ -33,7 +33,8 @@
 - `docs/07–10` —— 合并版说明 / 对齐验证报告 / R2023a 复现指南 / 607 项 PASS 明细；
 - 复现入口：`python -u python/run_tasks.py`（合并管线，交叉验证口径）；
   `docs/08_对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）；
-- A5 工程口径核心对比：`python -u python/run_canonical.py`；参数口径机器交叉校验：`python python/check_params.py`（PASS 98 / FAIL 0）；
+- A5 工程口径核心对比：`python -u python/run_canonical.py`；参数口径机器交叉校验：`python python/check_params.py`（PASS 103 / FAIL 0）；
+- **SITL 软件在环**：`dsp/src` 原样编成动态库、由 Python 主电路逐拍驱动真 `app_isr`，验证固件能否冷启动闭环（见 `docs/17_SITL软件在环.md`）；
 
 **参考存档**（不再维护，仅供版本对照）：
 
@@ -54,7 +55,7 @@ S1/S4/S5/S6 图与 sim_summary* 表（THD 23–30% 为伪影，非物理）已�
   （方案口径未计入 Lg，不影响量级结论）。
 - **参数体系已统一（2026-11-02）**：唯一工程口径 = `params/params.json`（《实现方案》体系：36 V/20 kHz/0.5 mH/20 µF/4.5 mF/400 ns），
   《实施方案》（30 V/10 kHz/0.6 mH/66 µF）降级为**备选口径**（存档），合并验证版的对方设计值（Vdc 80 V/2 mH/12 µF/1 µs）为**交叉验证口径**：
-  差异项已登记并由 `python python/check_params.py` 机器校验（PASS 98 / FAIL 0），依据与换算见 docs/12。
+  差异项已登记并由 `python python/check_params.py` 机器校验（PASS 103 / FAIL 0），依据与换算见 docs/12。
 - **运行注意**：A4 远起点（V0=62/90 V）单次约 7 min，全管线实际 25–30 min（README 早前写 12 min 偏低）；
   建议 `python -u python\run_tasks.py` 运行或分段调用 `a0()…a4()`——被 shell 超时终止时
   stdout 缓冲会丢失且 A4 可能不落盘。
@@ -83,12 +84,22 @@ gcc -std=c99 -O2 -I include tests\test_control.c src\*.c -o tests\test_control.e
 # 6. A5 工程口径核心对比（工程口径；22 例约 14 min）
 python -u python\run_canonical.py
 
-# 7. 参数口径机器交叉校验（真源 = params/params.json，期望 PASS 98 / FAIL 0）
+# 7. 参数口径机器交叉校验（真源 = params/params.json，期望 PASS 103 / FAIL 0）
 cd python && python check_params.py
 
 # 8. 原理图/BOM 重生成与版式验收（P2）
 python tools\make_schematic.py
 python tools\check_svg_layout.py
+
+# 9. SITL 软件在环：把 dsp/src 的固件编成动态库，用 Python 主电路逐拍驱动（docs/17）
+python tools\sitl_build.py                                  # 编 dsp/sim/build/sitl.dll
+python python\sitl.py --struct L --mode avg --dur 2.0        # 单跑：状态机 + 稳态
+python python\sitl.py --struct LC --rd 1 --mode sw --nsub 40 --dur 1.2 --log-sub
+python tools\sitl_matrix.py                                  # 四工况矩阵 → results/tables/SITL_core.csv
+
+# 10. 一键验收（提交前门禁：V1–V7）
+python tools\verify_all.py            # 全量，本机实测 PASS 7 / FAIL 0 / SKIP 0，约 7 s
+python tools\verify_all.py --quick    # 跳过 DSP 单测、参数设计复算、SITL 冒烟
 ```
 
 ## 目录结构（2026-10-29 结构统一后）
@@ -112,15 +123,20 @@ pv_inverter_lc_study/
 │   ├── process_scope_csv.m       #   实测 CSV 批处理（实验阶段用）
 │   └── build_simulink_model.m    #   我方框架模型生成脚本
 ├── dsp/                          # C2000 算法层 C 代码（gcc/TI 编译通过）
+│   └── sim/                      #   SITL 桥接层 sitl_bridge.c（固件编成动态库给 Python 驱动）
 ├── results/                      # figures/ + tables/（解析产物 + A0–A5 验证数据共存）
 ├── data/                         # experiments/（实验阶段）+ sim_results/（重生成用）
 ├── docs/                         # 01–06 计划/规程 + 07–10 合并版说明/对齐报告/复现指南/607 明细
 │                                 # + 11 技术文件校验与复跑验证报告（2026-11-01）
 │                                 # + 12 参数口径与单一真源 + 13 S/E/A 编号映射
-│                                 # + 14 原理图与 BOM + 15 结题报告初稿
-├── tools/                        # P2 原理图/BOM 生成与版式验收脚本
+│                                 # + 14 原理图与 BOM + 15 结题报告初稿 + 16 EDA 任务书
+│                                 # + 17 SITL 软件在环（固件+主电路闭环）
+├── tools/                        # 生成 / 验收 / 一键门禁脚本
 │   ├── make_schematic.py         #   生成 docs/schematic_system.svg + results/tables/BOM_canonical.csv
-│   └── check_svg_layout.py       #   SVG 版式独立验收（文字越界 / 色块重叠）
+│   ├── check_svg_layout.py       #   SVG 版式独立验收（文字越界 / 色块重叠）
+│   ├── sitl_build.py             #   把 dsp/ 编成 dsp/sim/build/sitl.dll
+│   ├── sitl_matrix.py            #   SITL 四工况矩阵 → results/tables/SITL_core.csv
+│   └── verify_all.py             #   一键验收 V1–V7（提交前门禁）
 ├── archive/                      # 参考存档（不再维护）
 │   ├── python_old_sim/           #   旧 Python 开关级（PWM 量化伪影版）
 │   ├── python_old_analysis/      #   旧口径实现与测试

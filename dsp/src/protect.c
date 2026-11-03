@@ -46,7 +46,7 @@ uint32_t protect_step(ProtectState *p, const ProtectIn *in, float ts)
     if (over_for(&p->ov_s, in->vdc > VDC_OV_V, ts, tconf)) {
         now |= FAULT_VDC_OV;
     }
-    if (over_for(&p->uv_s, in->vdc < VDC_UV_V, ts, tconf)) {
+    if (!in->uv_mask && over_for(&p->uv_s, in->vdc < VDC_UV_V, ts, tconf)) {
         now |= FAULT_VDC_UV;
     }
 

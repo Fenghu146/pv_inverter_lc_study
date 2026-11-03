@@ -22,6 +22,7 @@ typedef struct {
     float freq_hz;      /* 估计电网频率，Hz */
     int   pll_unlocked; /* 非 0：PLL 已判定失锁 */
     int   grid_check_en;/* 非 0：才判交流范围 / 频率 / PLL */
+    int   uv_mask;      /* 非 0：屏蔽母线欠压（预充前母线本来就在 0 V） */
 } ProtectIn;
 
 typedef struct {
