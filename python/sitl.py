@@ -69,12 +69,17 @@ class Bridge(object):
         self.lib.sitl_step.argtypes = [ctypes.POINTER(ctypes.c_double),
                                        ctypes.POINTER(ctypes.c_double)]
         self.lib.sitl_tbprd.restype = ctypes.c_uint
+        self.lib.sitl_set_trip.argtypes = [ctypes.c_int]
         self.tbprd = int(self.lib.sitl_tbprd())
         self.si = (ctypes.c_double * 6)()
         self.out = (ctypes.c_double * 20)()
 
     def reset(self, voc):
         return self.lib.sitl_reset(float(voc))
+
+    def set_trip(self, on):
+        """模拟硬件过流比较器（CMPSS）跳闸/清锁存。"""
+        self.lib.sitl_set_trip(1 if on else 0)
 
     def step(self, si):
         for k in range(6):
@@ -166,20 +171,44 @@ class Plant(object):
         self.i_pv = 0.0
         self.pv_connected = False
         self._phase = 0.0
+        # ---- 故障注入用的可编程量（默认都是"正常"）----
+        self.grid_scale = 1.0      # 电网电压幅值系数（0.5 = 跌到 50 %）
+        self.grid_freq = F_G       # 电网频率（Hz）
+        self.grid_short = False    # PCC 对地短路（v_g 被短接到 0，L_g 直接承受 v_c）
+        self.grid_open = False     # 电网断开（断路器拉开）
+        self.pv_scale = 1.0        # 辐照度系数（0 = PV 掉电）
+        self.ph_extra = 0.0        # 相位突变量（rad），跳变时累加
+        self.pre_break = False     # 预充电阻回路断开（模拟预充支路失效）
+        self.i_inject = 0.0        # 信号级过流注入（A）：叠加到传感器看到的 i_g 上，
+                                   # 用于验证过流检测→封锁→复位链路（不改变主电路潮流）
+        self.contactor = False     # 直流侧主接触器（预充完成后闭合，旁路预充电阻）
+        self.R_bleed = 10000.0     # 母线泄放电阻（Ω）：掉电/过压后 C_dc 必须能放电，
+                                   # 否则母线电压条件永远不消失、故障清不掉
+        self.g_theta = 0.0         # 电网相位累加器（改频率不会跳相）
 
     # ---- 电网 ----
+    @property
+    def grid_w(self):
+        return 2.0 * math.pi * self.grid_freq
+
     def _vg(self, t):
-        return UG_PK * math.sin(2.0 * math.pi * F_G * t)
+        if self.grid_open:
+            return 0.0
+        if self.grid_short:
+            return 0.0
+        return self.grid_scale * UG_PK * math.sin(self.g_theta + self.ph_extra)
 
     # ---- PV/母线接线状态 ----
     def pv_settle(self, precharge_on, relay_closed):
         """按接线状态更新 i_pv / v_pv，返回串入电阻（None = 断开）。"""
-        if relay_closed:
-            r = 0.0
+        if self.contactor:
+            r = 0.0                # 直流接触器闭合：PV 直连母线
         elif precharge_on:
-            r = R_PRE
+            r = R_PRE              # 预充：经 100 Ω
         else:
-            r = None
+            r = None               # 接触器与预充都没动：PV 没有通路（零偏标定期间必须如此）
+        if self.pre_break and r is not None and r > 0.0:
+            r = None               # 预充支路断开：PV 完全没有通路
         if r is None:
             self.pv_connected = False
             self.i_pv = 0.0
@@ -187,14 +216,14 @@ class Plant(object):
             return None
         self.pv_connected = True
         if r <= 0.0:
-            self.i_pv = self.pv.current(self.vdc)
+            self.i_pv = self.pv_scale * self.pv.current(self.vdc)
             self.v_pv = self.vdc
             return 0.0
         V = self.vdc
-        I = self.pv.current(V)
+        I = self.pv_scale * self.pv.current(V)
         for _ in range(4):
             V = self.vdc + r * I
-            I = self.pv.current(V)
+            I = self.pv_scale * self.pv.current(V)
         self.i_pv = I
         self.v_pv = V
         return r
@@ -202,7 +231,8 @@ class Plant(object):
     # ---- 测量（送进 DSP 的 SI 值） ----
     def measure(self, t, precharge_on, relay_closed):
         self.pv_settle(precharge_on, relay_closed)
-        return [self.v_pv, self.i_pv, self.vdc, self.vc, self.iL, self.ig]
+        return [self.v_pv, self.i_pv, self.vdc, self.vc, self.iL,
+                self.ig + self.i_inject]
 
     # ---- 功率级 ----
     def _dt_err(self):
@@ -255,13 +285,14 @@ class Plant(object):
             diL = (v_ab - v_g - (self.Rf + self.Rg) * self.iL) / (self.L + self.Lg)
             dig = diL
         i_dc = v_ab * self.iL / max(self.vdc, 1.0)
-        dvdc = (self.i_pv - i_dc) / self.Cdc
+        dvdc = (self.i_pv - i_dc - self.vdc / self.R_bleed) / self.Cdc
         return diL, dig, dvc, dvcint, dvdc
 
     def integrate(self, t, cmpa_a, cmpa_b, precharge_on, relay_closed=True,
                   cmpa_prev=None):
         n = self.nsub if self.mode == "sw" else ODE_NSUB_AVG
         dt = TS / float(n)
+        self.g_theta += self.grid_w * TS   # 一个控制拍推进一次（改频率不跳相）
         v_g = self._vg(t)
         if not relay_closed:
             # 并网继电器断开：耦合网络与电网之间开路，没有电流回路；
@@ -269,8 +300,7 @@ class Plant(object):
             self.iL = 0.0
             self.ig = 0.0
             self.vc = v_g
-            if self.pv_connected:
-                self.vdc += (self.i_pv / self.Cdc) * TS
+            self.vdc += ((self.i_pv - self.vdc / self.R_bleed) / self.Cdc) * TS
             if self.vdc < 0.0:
                 self.vdc = 0.0
             return
@@ -387,11 +417,16 @@ def run(struct="L", mode="avg", dur=2.0, rd=0.0, nsub=40, voc=90.0, vdc0=0.0,
         si = pl.measure(t, pre, relay)
         out = br.step(si)
         pre = bool(out[15])
-        relay = bool(out[10])
+        relay = bool(out[10]) and not bool(out[16])   # app.c: hal_relay(relay_close && !trip)
         pl.integrate(t, out[0], out[1], pre, relay, cmpa_prev=cmpa_prev)
         cmpa_prev = (float(out[0]), float(out[1]))
         t += TS
         st = int(out[11])
+        # 直流侧接触器时序：预充完成（进 SYNC）后闭合旁路 100 Ω，故障时断开
+        if st in (4, 5, 6, 9):
+            pl.contactor = True
+        elif st == 7:
+            pl.contactor = False
         if not states_seen or states_seen[-1][1] != st:
             states_seen.append((t, st))
         rows.append([t, si[0], si[1], si[2], si[3], si[4], si[5],

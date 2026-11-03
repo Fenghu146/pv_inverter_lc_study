@@ -29,8 +29,8 @@ extern "C" {
 
 /* ---------- SOGI-PLL（20 kHz） ---------- */
 #define SOGI_K                  (1.41f)
-#define PLL_KP                  (0.67f)
-#define PLL_KI                  (22.0f)
+#define PLL_KP                  (6.00f)
+#define PLL_KI                  (6.0f)
 /* v_q / GRID_UM_V 进入 PI；输出为 Δω，叠加在 ω0 上 */
 #define PLL_DW_LIM_RAD_S        (62.83185307179586f) /* ±10 Hz，抗饱和限幅 */
 

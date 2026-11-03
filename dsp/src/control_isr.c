@@ -86,7 +86,11 @@ void ctrl_isr(CtrlContext *c, const CtrlMeas *m, CtrlOut *o)
     pin.uv_mask = (c->fsm.state == ST_INIT ||
                    c->fsm.state == ST_OFFSET_CAL ||
                    c->fsm.state == ST_WAIT_GRID ||
-                   c->fsm.state == ST_PRECHARGE) ? 1 : 0;
+                   c->fsm.state == ST_PRECHARGE ||
+                   /* FAULT 期间 PWM 封锁、继电器断开，母线本来就该是放掉的；
+                    * 不屏蔽的话 UV 条件恒真，protect_try_clear 会永远拒绝复位
+                    * （2026-11-03 故障注入发现：掉电故障清不掉）。 */
+                   c->fsm.state == ST_FAULT) ? 1 : 0;
     /* 电网范围在并网前也要看，但 PLL 未锁时频率会漂，WAIT_GRID 只用 rms */
     pin.grid_check_en = (c->fsm.state == ST_WAIT_GRID ||
                          c->fsm.state == ST_SYNC ||
@@ -111,7 +115,22 @@ void ctrl_isr(CtrlContext *c, const CtrlMeas *m, CtrlOut *o)
     fin.fault_code = (int)c->prot.active;
     fin.debug_req = m->debug_req;
     fin.clear_fault = m->clear_fault;
-    fsm_step(&c->fsm, &fin, CTRL_TS_S);
+    {
+        InvState prev_state = c->fsm.state;
+        fsm_step(&c->fsm, &fin, CTRL_TS_S);
+        /* 复位请求只在故障条件已经消失时才真的生效；否则原地退回 FAULT。
+         * 2026-11-03 SITL 故障注入发现：不加这段的话，状态机被 clear_fault 拉回
+         * INIT 的下一拍，又被 prot.latched 打回 FAULT，故障永远恢复不了。 */
+        if (prev_state == ST_FAULT && c->fsm.state == ST_INIT) {
+            if (!protect_try_clear(&c->prot)) {
+                c->fsm.state = ST_FAULT;
+                c->fsm.fault_code = c->prot.latched;
+                c->fsm.timer_s = 0.0f;
+                c->fsm.pwm_enable = 0;
+                c->fsm.relay_close = 0;
+            }
+        }
+    }
 
     /* 电压外环 1 kHz：MPPT_RUN 跟踪 Vdc*，FIXED_I 不用 */
     c->vdc_div++;

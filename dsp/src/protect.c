@@ -28,6 +28,17 @@ void protect_clear(ProtectState *p)
     p->uv_s = 0.0f;
     p->latched = FAULT_NONE;
     p->active = FAULT_NONE;
+    p->current = FAULT_NONE;
+}
+
+/* 只有"当前没有任何故障条件"时才允许复位，避免按住复位键强行闯故障 */
+int protect_try_clear(ProtectState *p)
+{
+    if (p->current != FAULT_NONE) {
+        return 0;
+    }
+    protect_clear(p);
+    return 1;
 }
 
 uint32_t protect_step(ProtectState *p, const ProtectIn *in, float ts)
@@ -62,6 +73,7 @@ uint32_t protect_step(ProtectState *p, const ProtectIn *in, float ts)
         }
     }
 
+    p->current = now;          /* 本拍仍存在的条件（复位门禁用） */
     p->latched |= now;
     p->active = p->latched;
     return p->active;

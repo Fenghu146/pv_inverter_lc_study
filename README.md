@@ -34,7 +34,7 @@
 - 复现入口：`python -u python/run_tasks.py`（合并管线，交叉验证口径）；
   `docs/08_对齐验证报告_R2023a.md` 第 6 节（R2023a 开关层，命令照抄）；
 - A5 工程口径核心对比：`python -u python/run_canonical.py`；参数口径机器交叉校验：`python python/check_params.py`（PASS 103 / FAIL 0）；
-- **SITL 软件在环**：`dsp/src` 原样编成动态库、由 Python 主电路逐拍驱动真 `app_isr`，验证固件能否冷启动闭环（见 `docs/17_SITL软件在环.md`）；
+- **SITL 软件在环**：`dsp/src` 原样编成动态库、由 Python 主电路逐拍驱动真 `app_isr`，验证固件能否冷启动闭环；再往上加故障注入（过流/短路/掉电/电网异常/硬件 Trip/预充超时）验证保护动作与恢复路径（见 `docs/17_SITL软件在环.md` §5–§6）；
 
 **参考存档**（不再维护，仅供版本对照）：
 
@@ -97,9 +97,13 @@ python python\sitl.py --struct L --mode avg --dur 2.0        # 单跑：状态�
 python python\sitl.py --struct LC --rd 1 --mode sw --nsub 40 --dur 1.2 --log-sub
 python tools\sitl_matrix.py                                  # 四工况矩阵 → results/tables/SITL_core.csv
 
-# 10. 一键验收（提交前门禁：V1–V7）
-python tools\verify_all.py            # 全量，本机实测 PASS 7 / FAIL 0 / SKIP 0，约 7 s
-python tools\verify_all.py --quick    # 跳过 DSP 单测、参数设计复算、SITL 冒烟
+# 10. 故障注入：过流/短路/掉电/电网异常/硬件 Trip/预充超时 × 保护动作 + 恢复（docs/17 §6）
+python python\sitl_faults.py                 # 全部 9 个场景 → results/tables/SITL_faults.csv
+python python\sitl_faults.py --only F1,F5    # 只跑指定场景
+
+# 11. 一键验收（提交前门禁：V1–V8）
+python tools\verify_all.py            # 全量，本机实测 PASS 8 / FAIL 0 / SKIP 0，约 8 s
+python tools\verify_all.py --quick    # 跳过 DSP 单测、参数设计复算、SITL 冒烟、故障注入
 ```
 
 ## 目录结构（2026-10-29 结构统一后）
@@ -115,6 +119,8 @@ pv_inverter_lc_study/
 │   ├── engine.py                 #   对方控制算法逐行移植 + 平均功率级 + 死区误差注入
 │   ├── metrics.py / analytic.py  #   THD(2-50)/TDD 口径 + LCL 谐振/衰减解析
 │   ├── run_tasks.py              #   A0–A4 一键重生成 results/
+│   ├── sitl.py                   #   ★ SITL：Python 主电路逐拍驱动真 control_isr（ctypes）
+│   ├── sitl_faults.py            #   ★ 故障注入场景矩阵 → results/tables/SITL_faults.csv
 │   └── design/param_design.py    #   S1–S3 参数设计探索（解析）
 ├── matlab/                       # ★ MATLAB 侧（2023a 正式版）
 │   ├── PV_LC_models_R2023a/      #   对方 28 个开关模型 R2023a 原生版（607 项 ALL PASS）
@@ -136,7 +142,7 @@ pv_inverter_lc_study/
 │   ├── check_svg_layout.py       #   SVG 版式独立验收（文字越界 / 色块重叠）
 │   ├── sitl_build.py             #   把 dsp/ 编成 dsp/sim/build/sitl.dll
 │   ├── sitl_matrix.py            #   SITL 四工况矩阵 → results/tables/SITL_core.csv
-│   └── verify_all.py             #   一键验收 V1–V7（提交前门禁）
+│   └── verify_all.py             #   一键验收 V1–V8（提交前门禁）
 ├── archive/                      # 参考存档（不再维护）
 │   ├── python_old_sim/           #   旧 Python 开关级（PWM 量化伪影版）
 │   ├── python_old_analysis/      #   旧口径实现与测试

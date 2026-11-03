@@ -71,6 +71,8 @@ void hal_clear_trip(void);
 /* ---- 板级扩展（PC stub 提供空实现） ---- */
 /** 原始码直写入口，仅供 PC 自测注入；板级为 no-op。 */
 void hal_stub_set_raw(const unsigned short raw[6]);
+/** 硬件过流 Trip 锁存注入（模拟 CMPSS 比较器动作），仅供 SITL 故障注入。 */
+void hal_stub_set_trip(int on);
 
 /* ---- 看门狗与计数（板级实现可空） ---- */
 void hal_watchdog_kick(void);

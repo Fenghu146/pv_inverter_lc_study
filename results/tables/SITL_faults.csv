@@ -1,0 +1,10 @@
+scenario,name,struct,mode,desc,t_inject_s,t_fault_s,latency_ms,fault_code,fault_bits,hw_trip,peak_i_g_A,vdc_min_V,t_clear_s,t_recover_s,recovered,final_state,final_fault
+F1_OC_SIGNAL,过流（信号级注入 14 A）,L,avg,6 ms 14 A 故障电流：越过 OC_SOFT 10 A 与 OC_HARD 12 A,0.8,0.802,2.0,3,OC_SOFT+OC_HARD,0,18.91,72.94,1.05,1.2001,1,MPPT_RUN,0
+F9_GRID_INV,电网相位反相（母线过压）,L,avg,相位跳 180° 持续 60 ms：功率倒灌把母线顶到 95 V（靠泄放电阻等电压落回来）,0.8,0.8272,27.25,4,VDC_OV,0,10.01,72.94,1.6,1.9501,1,MPPT_RUN,0
+F2_PCC_SHORT,PCC 对地短路,L,avg,并网点短路 150 ms：交流电压塌陷 + 电流冲击,0.8,0.8199,19.95,16,VAC_RANGE,0,9.45,72.94,1.1,1.2501,1,MPPT_RUN,0
+F3_PV_LOSS,PV 掉电（母线欠压）,L,avg,辐照度掉到 0：C_dc 只放电，母线跌破 58 V,0.8,0.83,30.0,8,VDC_UV,0,7.22,57.02,1.45,1.6018,1,MPPT_RUN,0
+F4_VAC_SAG,电网电压跌落 50%,L,avg,36 V → 18 V（低于 VAC_RMS_MIN_V 30 V）,0.8,0.8199,19.95,16,VAC_RANGE,0,8.5,72.94,1.25,1.4001,1,MPPT_RUN,0
+F5_FREQ_STEP,电网频率 50 → 55 Hz,L,avg,频率跳变越限（FREQ_MAX_HZ 51 Hz）,0.8,0.8294,29.45,64,PLL_UNLOCK,0,7.76,71.84,1.3,1.5707,1,MPPT_RUN,0
+F6_PLL_JUMPS,相位连续跳变（PLL 失锁）,L,avg,每 25 ms 跳 60°：幅值/频率都正常，只有 PLL 失锁,0.8,0.8205,20.5,64,PLL_UNLOCK,0,8.09,72.41,1.4,1.5501,1,MPPT_RUN,0
+F7_HW_TRIP,硬件 CMPSS 过流 Trip,L,avg,模拟比较器跳闸锁存：PWM 必须当拍封锁,0.8,,0.05,0,-,1,0.42,72.94,1.1,1.1,1,MPPT_RUN,0
+F8_PRECHARGE_TO,预充超时,L,avg,预充回路断开：母线 3 s 内建不起来,0.0,3.0896,0.0,128,PRECHARGE,0,0.0,0.0,3.4,3.6412,1,MPPT_RUN,0

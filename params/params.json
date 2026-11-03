@@ -54,8 +54,8 @@
   },
   "control": {
     "pll_sogi_k": 1.41,
-    "pll_pi_kp": 0.67,
-    "pll_pi_ki": 22,
+    "pll_pi_kp": 6.0,
+    "pll_pi_ki": 6.0,
     "current_pr_kp": 4.7,
     "current_pr_kr": 300,
     "current_pr_wc_rad_s": 5,

@@ -30,12 +30,22 @@ typedef struct {
     float oc_hard_s;
     float ov_s;
     float uv_s;
-    uint32_t latched;   /* 保持，直到 protect_clear */
+    uint32_t latched;   /* 保持，直到 protect_clear / protect_try_clear */
     uint32_t active;    /* 本拍新判定（含已锁存） */
+    uint32_t current;   /* 本拍"仍然存在"的条件（不带确认时间、不锁存） */
 } ProtectState;
 
 void protect_init(ProtectState *p);
 void protect_clear(ProtectState *p);
+/**
+ * 复位锁存，但只在本拍故障条件已经消失时才允许。
+ * 返回 1=已复位；0=条件仍在，拒绝复位（调用方应维持 FAULT 状态）。
+ *
+ * 2026-11-03 SITL 故障注入发现：原来 protect_clear 只在 protect_init 里调用，
+ * clear_fault 之后 latched 仍非零 → 状态机回 INIT 的下一拍立刻再进 FAULT，
+ * 故障永远恢复不了（现场只能断电重启）。这个函数补上安全复位路径。
+ */
+int protect_try_clear(ProtectState *p);
 uint32_t protect_step(ProtectState *p, const ProtectIn *in, float ts);
 
 #ifdef __cplusplus

@@ -30,6 +30,9 @@ void sitl_step(const double si[6], double out[SITL_OUT_N]);
 
 unsigned sitl_tbprd(void);
 
+/** 模拟硬件过流比较器把 CMPSS Trip 锁存置位/清零（1=跳闸，0=清锁存）。 */
+void sitl_set_trip(int on);
+
 #ifdef __cplusplus
 }
 #endif

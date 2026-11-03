@@ -58,6 +58,11 @@ void app_isr(App *a)
     if (prev == ST_OFFSET_CAL && a->ctrl.fsm.state != ST_OFFSET_CAL) {
         hal_calibrate_finish();
     }
+    if (prev == ST_FAULT && a->ctrl.fsm.state == ST_INIT) {
+        /* 软件保护已允许复位，硬件 Trip 锁存必须一起清：
+         * 否则 pwm_ok 恒为 0，PWM 永远起不来（现场表现为"复位后不动"）。 */
+        hal_clear_trip();
+    }
     a->last_state = a->ctrl.fsm.state;
 
     /* ---- 4. 硬件 Trip：优先于软件状态机 ---- */

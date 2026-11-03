@@ -568,6 +568,80 @@ static void test_precharge_guard(void)
           f.state == ST_MPPT_RUN);
 }
 
+/* ---------- (l) 故障复位路径 ----------
+ * 2026-11-03 故障注入（SITL）发现：protect 锁存后没有清除路径，clear_fault 只把
+ * 状态机打回 INIT，下一拍又被锁存位打回 FAULT，现场表现是"按复位没反应"。
+ * 这里固化三条语义：① 条件还在时拒绝复位；② 条件消失后允许复位并清锁存；
+ * ③ 复位后能从 INIT 重新走完启动序列。 */
+static void test_fault_recovery(void)
+{
+    ProtectState p;
+    ProtectIn in;
+    CtrlContext ctx;
+    CtrlMeas m;
+    CtrlOut o;
+    int n, i;
+    const float Ts = CTRL_TS_S;
+    const int nconf = (int)(PROTECT_CONFIRM_MS * 0.001f / Ts) + 2;
+
+    printf("[l] fault recovery\n");
+
+    protect_init(&p);
+    memset(&in, 0, sizeof(in));
+    in.vdc = 70.0f;
+    in.vac_rms = 36.0f;
+    in.freq_hz = 50.0f;
+    in.grid_check_en = 1;
+    in.uv_mask = 0;
+    in.i_g = 0.0f;
+    in.i_hard = 0.0f;
+    for (n = 0; n < nconf; n++) {
+        protect_step(&p, &in, Ts);
+    }
+    check("healthy input latches nothing", p.latched == FAULT_NONE);
+    check("healthy input allows clear", protect_try_clear(&p) == 1);
+
+    /* (1) 过流条件仍在：拒绝复位 */
+    in.i_g = 11.0f;
+    for (n = 0; n < nconf; n++) {
+        protect_step(&p, &in, Ts);
+    }
+    check("11 A latches OC_SOFT", (p.latched & FAULT_OC_SOFT) != 0);
+    check("condition still present -> clear refused", protect_try_clear(&p) == 0);
+    check("refused clear keeps the latch", (p.latched & FAULT_OC_SOFT) != 0);
+
+    /* (2) 条件消失后允许复位 */
+    in.i_g = 1.0f;
+    protect_step(&p, &in, Ts);
+    check("condition gone -> clear allowed", protect_try_clear(&p) == 1);
+    check("clear wipes both latch and current",
+          p.latched == FAULT_NONE && p.current == FAULT_NONE);
+
+    /* (3) 复位后从 INIT 重新走完启动序列（母线已建立） */
+    ctrl_init(&ctx, 90.0f);
+    memset(&m, 0, sizeof(m));
+    m.vdc = 0.0f;
+    m.i_grid = 1.0f;
+    m.i_L = 1.0f;
+    m.vac_rms = -1.0f;
+    m.i_hard = -1.0f;
+    m.clear_fault = 0;
+    for (i = 0; i < (int)(1.2f / Ts); i++) {
+        m.v_grid = 50.91f * sinf(2.0f * 3.14159265f * 50.0f * (float)i * Ts);
+        m.vdc = 70.0f;
+        m.v_pv = 75.0f;
+        m.i_pv = 2.7f;
+        ctrl_isr(&ctx, &m, &o);
+        if (ctx.fsm.state == ST_MPPT_RUN) {
+            break;
+        }
+    }
+    printf("    restart reached state=%d after %.3f s\n",
+           (int)ctx.fsm.state, (float)i * Ts);
+    check("restart sequence reaches MPPT_RUN", ctx.fsm.state == ST_MPPT_RUN);
+    check("no latch left after restart", ctx.prot.latched == FAULT_NONE);
+}
+
 int main(void)
 {
     printf("pv inverter algorithm tests (Ts=50 us)\n");
@@ -582,6 +656,7 @@ int main(void)
     test_hal_scale();
     test_app_chain();
     test_precharge_guard();
+    test_fault_recovery();
 
     printf("----\n");
     if (g_fail == 0) {

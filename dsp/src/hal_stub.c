@@ -131,6 +131,13 @@ void hal_clear_trip(void)
     g_s.trip = 0;
 }
 
+/* 仅在 PC 自测里用：模拟 CMPSS 比较器在过流瞬间把 Trip 锁存置 1。
+ * 板级实现是硬件比较器 + EPWM XBAR，没有这个入口。 */
+void hal_stub_set_trip(int on)
+{
+    g_s.trip = on ? 1 : 0;
+}
+
 void hal_watchdog_kick(void)
 {
     g_s.wdog++;

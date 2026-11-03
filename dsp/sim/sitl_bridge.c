@@ -126,6 +126,11 @@ void sitl_step(const double si[6], double out[SITL_OUT_N])
 }
 
 /* 便于 Python 侧做一致性自检：返回算法层看到的 CMPA 上限（TBPRD） */
+void sitl_set_trip(int on)
+{
+    hal_stub_set_trip(on);
+}
+
 unsigned sitl_tbprd(void)
 {
     return PWM_TBPRD;
