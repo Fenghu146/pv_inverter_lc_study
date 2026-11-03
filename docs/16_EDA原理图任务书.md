@@ -152,3 +152,8 @@ python tools/check_netlist.py
 3. 交流侧隔离放大的供电与分压比匹配（`docs/14` §8 第 3 条）。
 4. LaunchPad 具体引脚号：`dsp/ccs/board.h` 只有初始化声明，引脚分配在 `pv_inverter.syscfg` 与 `hal_c2000.c`；网表中凡无来源的引脚一律记 `TBD`，画图时按 LaunchPad 丝印补齐。
 5. JTAG 与 SCI 排针的物理位置。
+
+**网表校验口径**（`tools/check_netlist.py`，2026-11-03 起）：CSV 共 147 行、61 网络、49 位号，硬错误 0、警告 0。
+其中 6 个"设计上只有一端"的网络已在脚本 `ALLOWED_SINGLE` 里逐个写明原因、降级为 INFO，不是漏画：
+JTAG_TCK/TMS/TDI/TDO（排针未落位）、AGND/PGND（单点接地，按 `docs/14:68` 只登记一端）。
+新增单节点网络若不在豁免表中，仍会报 WARN——**画图前先看这条**，别把豁免当成可以漏画。

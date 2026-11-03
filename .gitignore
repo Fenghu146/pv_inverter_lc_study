@@ -27,6 +27,8 @@ data/sim_results_matlab/*.csv
 
 # 实测原始数据默认不入库（结题材料另行归档）
 data/experiments/*.csv
+# 合成数据仅用于空跑数据管线
+data/experiments/_synthetic/
 
 # 临时文件
 .work/

@@ -71,7 +71,7 @@ extern "C" {
 /* ---------- 状态机时序 ---------- */
 #define OFFSET_CAL_MS           (50.0f)             /* 偏置校准窗口 */
 #define GRID_OK_MS              (40.0f)             /* 电网合格持续 */
-#define PRECHARGE_MS            (100.0f)            /* 预充典型时长（仅作参考/诊断） */
+#define PRECHARGE_MS            (1000.0f)           /* 预充典型时长（仅作参考/诊断）：100 Ω × 4.5 mF，τ=0.45 s，母线 90% 约 1.0 s */
 #define PRECHARGE_TIMEOUT_MS    (3000.0f)           /* 预充超时 → FAULT（不得绕过电压判据） */
 #define SYNC_LOCK_MS            (40.0f)             /* PLL 锁定确认 */
 #define CONNECT_DWELL_MS        (20.0f)             /* 合闸后电流建立 */
